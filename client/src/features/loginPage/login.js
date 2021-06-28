@@ -17,24 +17,40 @@ export const LoginPage = () =>{
     const handlePasswordChange = (e) =>{
         setPassword(e.target.value);
     }
-    const tryLogin = (e) =>{
+    const tryLogin = async (e) =>{
         e.preventDefault();
+
+        const response = await fetch("http://localhost:5000/auth/login");
+        const jsonData = await response.json();
         console.log(name);
         console.log(password);
     }
+
+    const tryGoogleLogin = async(e) =>{
+        e.preventDefault();
+        
+        const response = await fetch("http://localhost:5000/auth/google");
+        const jsonData = await response.json();
+
+    }
     return(
-        <form onSubmit={tryLogin}>
-            <p>Username:</p>
-            <input type="text" name="username" value={name} onChange={handleUsernameChange}></input>
-            <p>Password:</p>
-            <input type="password" name="password" value={password} onChange={handlePasswordChange}></input><br />
-            <input type="submit"></input>
-            <p>Not registered? <NavLink exact to="/signup">Signup here</NavLink></p>
-            <Switch>
-                <Route path ='/store'>
-                    <Signup />
-                </Route>
-            </Switch>
-        </form>
+        <div>
+            <form onSubmit={tryLogin}>
+                <p>Username:</p>
+                <input type="text" name="username" value={name} onChange={handleUsernameChange}></input>
+                <p>Password:</p>
+                <input type="password" name="password" value={password} onChange={handlePasswordChange}></input><br />
+                <input type="submit"></input>
+                <p>Not registered? <NavLink exact to="/signup">Signup here</NavLink></p>
+                <Switch>
+                    <Route path ='/store'>
+                        <Signup />
+                    </Route>
+                </Switch>
+            </form>
+
+            <button onClick={tryGoogleLogin}>GoogleLogin</button>
+        </div>
+
     )
 }

@@ -1,12 +1,17 @@
 const express = require("express");
+const authRoutes = require('./auth-routes');
 const app = express();
 const port = 5000;
 const cors = require("cors");
 const pool = require("./db");
+
+
 app.set("view engine", "ejs");
+
 
 //middleware
 
+app.use('/auth', authRoutes);
 app.use(cors());
 app.use(express.json());
 
@@ -283,9 +288,6 @@ app.delete("/orders/:id", async(req,res,next)=>{
     }
 })
 
-app.get('/google', async(req,res,next) =>{
-    //handle with passport
-})
 /*
 app.get();
 

@@ -17,33 +17,42 @@ function App() {
   
   const url = "http://localhost:3000/"
   const currentUser = useSelector(selectCurrentUser);
-    function isLoggedIn(user){
-        if (user.username === "Guest"){
-            return (<NavLink exact to='/login'><button>Login</button></NavLink>)
-        }
-        else{
-            return(
-                <div>
-                    <NavLink exact to="/profile"><button>Profile</button></NavLink>
-                    <NavLink exact to='/logout'><button>Logout</button></NavLink>
-                </div>
-                )
-        }
-      }
 
-    async function handleChange(e){
-      const data = e.target.value;
-        const response = await fetch(url, {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        });
-        const jsonValue = await response.json();
-        console.log(jsonValue);
-    }
+  const tryLogout = async (e) =>{
+    e.preventDefault();
+
+    const response = await fetch("http://localhost:5000/auth/logout");
+    const jsonData = await response.json();
+  }
+
+
+  function isLoggedIn(user){
+      if (user.username === "Guest"){
+          return (<NavLink exact to='/loginPage'><button>Login</button></NavLink>)
+      }
+      else{
+          return(
+              <div>
+                  <NavLink exact to="/profile"><button>Profile</button></NavLink>
+                  <NavLink exact to='/logout'><button onLogoutClick={tryLogout}>Logout</button></NavLink>
+              </div>
+              )
+      }
+  }
+
+  async function handleChange(e){
+    const data = e.target.value;
+      const response = await fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      const jsonValue = await response.json();
+      console.log(jsonValue);
+  }
   return(
     
     <BrowserRouter>
@@ -68,7 +77,7 @@ function App() {
         <Route path ='/store'>
           <StorePage />
         </Route>
-        <Route path = '/login'>
+        <Route path = '/loginPage'>
           <LoginPage />
         </Route>
         <Route path = '/signup'>
