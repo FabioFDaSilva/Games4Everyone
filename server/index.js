@@ -4,17 +4,22 @@ const app = express();
 const port = 5000;
 const cors = require("cors");
 const pool = require("./db");
-
+const passportSetup = require('./config/passport-setup');
 
 app.set("view engine", "ejs");
 
 
 //middleware
 
-app.use('/auth', authRoutes);
+
 app.use(cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+    res.header({"Access-Control-Allow-Origin": "https://localhost:3000"});
+    next();
+  }) 
+app.use('/auth', authRoutes);
 
 //Routes//
 

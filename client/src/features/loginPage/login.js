@@ -29,8 +29,15 @@ export const LoginPage = () =>{
     const tryGoogleLogin = async(e) =>{
         e.preventDefault();
         
-        const response = await fetch("http://localhost:5000/auth/google");
-        const jsonData = await response.json();
+        const response = await fetch("http://localhost:5000/auth/google", {
+            method:"GET",
+            headers: {
+                "Content-type": "application/json",
+                "Access-Control-Allow-Origin" : "localhost:3000"
+            }
+        });
+        console.log('response', await response.text());
+        ///const jsonData = await response.json();
 
     }
     return(
