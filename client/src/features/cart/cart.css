@@ -1,0 +1,14 @@
+.cartContainer { 
+  display: flex;
+}
+
+.cartContainer .listContainer{
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.listContainer .item {
+  background-color: darkgrey;
+  margin: 1em 1em;
+}

@@ -1,0 +1,42 @@
+main {
+  display: flex;
+  border: 1px solid black;
+  background-color: darkgrey;
+  flex-direction: column;
+  margin: 1em 1em;
+  padding: 3em 3em;
+  box-shadow: -1px 1px yellow;
+}
+
+main h2{
+  align-self: center;
+}
+
+main .explorePromo{
+  display: flex;
+  justify-content: space-around;
+  
+}
+
+main .explorePromoBox{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid black ;
+  background-color: rgb(115, 115, 115);
+}
+
+main .explorePromoBox p{
+  text-align:center;
+}
+
+main .explorePromoBox button{
+  justify-self: flex-end;
+  width: 50%;
+  align-self: center;
+  height: 5em;
+  width: 20em;
+  box-shadow: -1px 1px yellow;
+  margin-bottom:1px;
+  border-radius: 10%;
+}

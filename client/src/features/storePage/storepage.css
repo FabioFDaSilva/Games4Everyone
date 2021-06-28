@@ -1,0 +1,15 @@
+.storeContainer { 
+  display: flex;
+}
+
+.storeContainer .listContainer{
+  display: flex;
+  flex-direction: row;
+  padding: 1em 1em;
+  list-style: none;
+}
+
+.storeContainer .listContainer .item {
+  background-color: darkgrey;
+  margin: 2em 2em;
+}
