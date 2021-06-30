@@ -4,7 +4,9 @@ const app = express();
 const port = 5000;
 const cors = require("cors");
 const pool = require("./db");
-const passportSetup = require('./config/passport-setup');
+const passport = require('passport');
+const session = require('express-session');
+require('./config/passport-setup');
 
 app.set("view engine", "ejs");
 
@@ -12,16 +14,44 @@ app.set("view engine", "ejs");
 //middleware
 
 
-app.use(cors());
+app.use(cors({origin: "http://localhost:3000", credentials: true}));
 app.use(express.json());
+app.use(passport.initialize());
+app.use(session({
+    secret: "secretcode",
+    resave: true,
+    saveUninitialized: true
+}));
 
-app.use((req, res, next) => {
-    res.header({"Access-Control-Allow-Origin": "https://localhost:3000"});
+app.use(passport.session());
+//app.use('/auth', authRoutes);
+
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
-  }) 
-app.use('/auth', authRoutes);
-
+  });
 //Routes//
+
+app.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile']
+}));
+
+app.get('/auth/google/redirect', passport.authenticate('google', { failureRedirect: '../loginPage' }), (req, res) => {
+    res.redirect('/');
+})
+app.get('/auth/login', async (req, res, next) => {
+    ///handle with passport
+    console.log("logging in");
+    res.send("loggin in");
+});
+
+app.get('/auth/logout', async (req, res, next) => {
+    console.log("logging out");
+    res.send("logging out");
+
+});
 
 ///Select game based on ID
 app.get("/games/:id", async (req,res,next) =>{
