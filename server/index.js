@@ -30,12 +30,11 @@ app.use(passport.session());
 
 
 passport.serializeUser(function(user, done){
-    console.log("user for serialization");
     done(null, user.rows[0].id);
 });
 
-passport.deserializeUser(function(user, done){
-    console.log("user for deserialization");
+passport.deserializeUser(async function(id, done){
+    const user = await pool.query("SELECT * FROM google_users WHERE id = $1", [id])
     done(null, user)
 });
 
