@@ -5,12 +5,16 @@ import App from './App';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
+import Context from "./Context";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <Context>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </Context>
+    
   </React.StrictMode>,
   document.getElementById('root')
 );

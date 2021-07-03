@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Homepage } from './features/homepage/homepage';
 import { StorePage } from './features/storePage/storepage';
 import {LoginPage} from './features/loginPage/login';
@@ -11,6 +11,7 @@ import {useSelector} from "react-redux";
 import {selectCurrentUser} from "./features/currentUser/currentUserSlice";
 import { ItemPage } from './features/itemPage/itemPage';
 import logo from "./resources/images/logo.png";
+import { myContext } from './Context';
 
 
 function App() {
@@ -24,6 +25,9 @@ function App() {
     const response = await fetch("http://localhost:5000/auth/logout");
     const jsonData = await response.json();
   }
+
+  const userObject = useState(myContext);
+  console.log(userObject);
 
 
   function isLoggedIn(user){

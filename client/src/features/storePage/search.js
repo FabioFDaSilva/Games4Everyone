@@ -20,7 +20,7 @@ export const Search = () =>{
             }
 
             console.log(JSON.stringify(body));
-            const response = await fetch("http://localhost:5000/store",{
+            const response = await fetch("http://localhost:5000/games",{
                 method:"POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
