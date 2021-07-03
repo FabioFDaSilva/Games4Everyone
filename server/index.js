@@ -7,7 +7,7 @@ const cors = require("cors");
 const pool = require("./db");
 const passport = require('passport');
 const session = require('express-session');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const keys = require('./config/keys');
 require('./config/passport-setup');
 
@@ -28,16 +28,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-passport.serializeUser((user, done) => {
+
+passport.serializeUser(function(user, done){
     console.log("user for serialization");
-    console.log(user);
-    return done(null, user.id);
+    done(null, user.rows[0].id);
 });
 
-passport.deserializeUser((id, done) => {
+passport.deserializeUser(function(user, done){
     console.log("user for deserialization");
-    console.log(id);
-    return done(null, id)
+    done(null, user)
 });
 
 
@@ -46,27 +45,20 @@ passport.use(new GoogleStrategy({
     clientSecret: keys.google.clientSecret,
     callbackURL: "/auth/google/redirect"
 },
-    async function (accessToken, refreshToken, profile, cb) {
+    async (accessToken, refreshToken, profile, cb) => {
         try {
-            const selectedUser = await pool.query("SELECT * FROM googleUsers WHERE id = $1", [profile.id]);
-            console.log(selectedUser);
-            if (!selectedUser) {
-                const newUser = await pool.query("INSERT INTO googleUsers VALUES($1,$2)", [profile.id, profile.displayName]);
-                return newUser.then((result) => {
-                    return cb(null, newUser);
-                })
-                    .catch((err) => {
-                        cb(new Error(err.message));
-                    })
+            // Check if user exists
+            const user = await pool.query("SELECT * FROM google_users WHERE id = $1", [profile.id])
+            console.log(user);
+            // If no user found, create new user
+            if (user.rowCount === 0) {
+                const newUser = await pool.query("INSERT INTO google_users VALUES ($1,$2) RETURNING *", [profile.id, profile.displayName]);
+                return cb(null, newUser);
             }
-
-            return selectedUser.then((result) =>{
-                return cb(null, selectedUser);
-            })
-            .catch((err) =>{
-                cb(new Error(err.message));
-            })
+            // User already exists, return profile
+            return cb(null, user);
         } catch (err) {
+            console.log("erorr:");
             console.error(err.message);
         }
     }));
