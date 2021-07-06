@@ -13,12 +13,12 @@ import { ItemPage } from './features/itemPage/itemPage';
 import logo from "./resources/images/logo.png";
 import { myContext } from './Context';
 import axios from 'axios';
+import { current } from '@reduxjs/toolkit';
 
 
 function App() {
   
   const url = "http://localhost:3000/"
-  const currentUser = useSelector(selectCurrentUser);
 
   const tryLogout = async (e) =>{
     e.preventDefault();
@@ -33,10 +33,11 @@ function App() {
   }
 
   const userObject = useContext(myContext);
-
+  const currentUser = useSelector(selectCurrentUser);
 
   const isLoggedIn= () =>{
-      if (!userObject){
+    console.log(currentUser);
+      if (!userObject && currentUser.username !== "Guest"){
           return (<NavLink exact to='/loginPage'><button>Login</button></NavLink>)
       }
       else{

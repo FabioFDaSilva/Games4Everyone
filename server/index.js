@@ -40,13 +40,23 @@ app.use('/orders', ordersRoutes);
 
 
 passport.serializeUser(function (user, done) {
-    done(null, user.rows[0].id);
+    console.log("serialize user");
+    done(null, user.id);
 });
 
 passport.deserializeUser(async function (id, done) {
     try {
-        const user = await pool.query("SELECT * FROM google_users WHERE id = $1", [id]);
-        done(null, user);
+        console.log("deserialize user");
+        const googleUser = await pool.query("SELECT * FROM google_users WHERE id = $1", [id]);
+        const localUser = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+
+        if(googleUser.rowCount > 0){
+            
+            done(null, googleUser);
+        }
+        else if (localUser.rowCount > 0){
+            done(null, localUser);
+        }
     } catch (err) {
         console.error(err.message);
     }
@@ -57,24 +67,34 @@ passport.deserializeUser(async function (id, done) {
 const authenticateUser = async (username, password, done) => {
     const user = await pool.query("SELECT * FROM users WHERE username = $1",[username]);
     
-    console.log(user);
+    
+    const userInfo = {
+        id: user.rows[0].id,
+        username: user.rows[0].username
+    }
+    console.log(userInfo);
     if (user.rowCount < 1) {
-        console.log("woops");
+        console.log("woops, rowcown < 1");
         return done(null, false, { message: "No user with that username" });
     }
     try {
-        if (await bcrypt.compare(password, user.password)) {
-            return done(null, user);
+        console.log("compare passwords");
+        if (await bcrypt.compare(password, user.rows[0].password)) {
+            console.log("they match");
+            return done(null, userInfo);
         } else {
+            console.log("they don't");
             return done(null, false, { message: "Password doesn't match!" });
         }
     } catch (e) {
+        console.log("error");
         return done(e);
 
     }
 }
-passport.use(new LocalStrategy({
-    usernameField: 'username'}, authenticateUser));
+passport.use(new LocalStrategy({}, authenticateUser));
+
+
 
 
 passport.use(new GoogleStrategy({
