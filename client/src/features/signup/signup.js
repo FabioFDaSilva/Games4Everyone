@@ -29,6 +29,18 @@ export const Signup = () =>{
         console.log(name);
         console.log(password);
         console.log(address);
+        const user = {
+            "username": name,
+            "password": password,
+            "address": address
+        }
+        const newUser = fetch("http://localhost:5000/users", {
+            method: "POST",
+            body: JSON.stringify(user),
+            headers:{
+                "Content-Type" : "application/json"
+            }
+        })
     }
     return(
         <form onSubmit={trySignup}>

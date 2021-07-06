@@ -7,7 +7,6 @@ export const currentUserSlice = createSlice({
             "user": {
                 id: "1",
                 username: "Guest",
-                cart_id: "1"
             }
         }
     },
@@ -16,7 +15,7 @@ export const currentUserSlice = createSlice({
             state.currentUser.user = action.payload;
         },
         logout: (state, action) => {
-            state.currentUser.user = { id: "", userName: "Guest", cart_id: "" };
+            state.currentUser.user = { id: "", userName: "Guest" };
         }
     },
 

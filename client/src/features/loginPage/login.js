@@ -19,11 +19,10 @@ export const LoginPage = () =>{
     }
     const tryLogin = async (e) =>{
         e.preventDefault();
-
-        const response = await fetch("http://localhost:3000");
-        const jsonData = await response.json();
+        
         console.log(name);
         console.log(password);
+        window.open("http://localhost:5000/auth/login", "_self");
     }
 
     const googleLogin = async(e) =>{

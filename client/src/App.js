@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Homepage } from './features/homepage/homepage';
 import { StorePage } from './features/storePage/storepage';
 import {LoginPage} from './features/loginPage/login';
@@ -12,6 +12,7 @@ import {selectCurrentUser} from "./features/currentUser/currentUserSlice";
 import { ItemPage } from './features/itemPage/itemPage';
 import logo from "./resources/images/logo.png";
 import { myContext } from './Context';
+import axios from 'axios';
 
 
 function App() {
@@ -22,23 +23,27 @@ function App() {
   const tryLogout = async (e) =>{
     e.preventDefault();
 
-    const response = await fetch("http://localhost:5000/auth/logout");
-    const jsonData = await response.json();
+    axios.get("http://localhost:5000/auth/logout",{
+      withCredentials: true
+    }).then(res=>{
+      if(res.data === "Done"){
+        window.location.href = "/"
+      }
+    })
   }
 
-  const userObject = useState(myContext);
-  console.log(userObject);
+  const userObject = useContext(myContext);
 
 
-  function isLoggedIn(user){
-      if (user.username === "Guest"){
+  const isLoggedIn= () =>{
+      if (!userObject){
           return (<NavLink exact to='/loginPage'><button>Login</button></NavLink>)
       }
       else{
           return(
               <div>
                   <NavLink exact to="/profile"><button>Profile</button></NavLink>
-                  <NavLink exact to='/logout'><button onLogoutClick={tryLogout}>Logout</button></NavLink>
+                  <NavLink exact to='/logout'><button onClick={tryLogout}>Logout</button></NavLink>
               </div>
               )
       }
@@ -72,7 +77,7 @@ function App() {
           </div>
           <div className="rightAlign">
             <NavLink exact to='/cart'><button>Cart</button></NavLink>
-            {isLoggedIn(currentUser.user)}
+            {isLoggedIn()}
           </div>
 
           </nav>

@@ -12,15 +12,18 @@ router.get('/google/redirect', passport.authenticate('google', { failureRedirect
     });
 
 
-router.get('/login', async (req, res, next) => {
-    ///handle with passport
-    console.log("logging in");
-    res.send("loggin in");
+router.get('/login', passport.authenticate('local', {
+    failureRedirect: 'http://localhost:3000/loginPage',
+}), function (req, res, next) {
+    res.redirect('http://localhost:3000');
 });
 
 router.get('/logout', async (req, res, next) => {
-    console.log("logging out");
-    res.send("logging out");
-
+    console.log("trying to log out");
+    console.log(req.sessionID);
+    if (req.sessionID) {
+        req.logout();
+        res.send("Done");
+    }
 });
 module.exports = router;

@@ -1,11 +1,21 @@
 const passport = require('passport');
 const router = require('express').Router();
 const pool = require("../db");
+const bcrypt = require('bcrypt');
 
 router.post("/", async (req, res, next) => {
     try {
-        const { user } = req.body;
-        const newUser = await pool.query("INSERT INTO users VALUES($1, $2, $3, $4) RETURNING *", [req.body.id, req.body.username, req.body.password, req.body.address]);
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        console.log(hashedPassword);
+        const totalIDs = await pool.query("SELECT COUNT (*) FROM users");
+        var newID = Math.floor(Math.random() * 1000000);
+        console.log(newID);
+        const verifyEmptyIDSpot = await pool.query("SELECT username FROM users where id = $1", [newID]);
+
+        while (verifyEmptyIDSpot.rowCount > 0){
+            newID = Math.floor(Math.random() * 1000000);
+        }
+        const newUser = await pool.query("INSERT INTO users VALUES($1, $2, $3, $4) RETURNING *", [newID, req.body.username, hashedPassword, req.body.address]);
         res.json(newUser);
 
     } catch (err) {

@@ -11,7 +11,10 @@ const pool = require("./db");
 const passport = require('passport');
 const session = require('express-session');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const LocalStrategy = require('passport-local').Strategy;
 const keys = require('./config/keys');
+const bcrypt = require('bcrypt');
+
 require('./config/passport-setup');
 
 app.set("view engine", "ejs");
@@ -36,20 +39,42 @@ app.use('/order_items', order_itemsRoutes);
 app.use('/orders', ordersRoutes);
 
 
-passport.serializeUser(function(user, done){
+passport.serializeUser(function (user, done) {
     done(null, user.rows[0].id);
 });
 
-passport.deserializeUser(async function(id, done){
+passport.deserializeUser(async function (id, done) {
     try {
         const user = await pool.query("SELECT * FROM google_users WHERE id = $1", [id]);
         done(null, user);
     } catch (err) {
         console.error(err.message);
     }
-    
-    
+
+
 });
+
+const authenticateUser = async (username, password, done) => {
+    const user = await pool.query("SELECT * FROM users WHERE username = $1",[username]);
+    
+    console.log(user);
+    if (user.rowCount < 1) {
+        console.log("woops");
+        return done(null, false, { message: "No user with that username" });
+    }
+    try {
+        if (await bcrypt.compare(password, user.password)) {
+            return done(null, user);
+        } else {
+            return done(null, false, { message: "Password doesn't match!" });
+        }
+    } catch (e) {
+        return done(e);
+
+    }
+}
+passport.use(new LocalStrategy({
+    usernameField: 'username'}, authenticateUser));
 
 
 passport.use(new GoogleStrategy({
@@ -70,7 +95,7 @@ passport.use(new GoogleStrategy({
             // User already exists, return profile
             return cb(null, user);
         } catch (err) {
-            console.log("erorr:");
+            console.log("error:");
             console.error(err.message);
         }
     }));
@@ -88,13 +113,6 @@ app.get("/googleUsers/:googleId", async (req, res, next) => {
     }
 });
 
-/*
-app.get();
-
-app.delete();
-
-app
-*/
 app.listen(port, () => {
     console.log(`server started on port ${port}`);
 });
