@@ -1,3 +1,4 @@
+import { current } from "@reduxjs/toolkit";
 import {useSelector} from "react-redux";
 import { useDispatch } from "react-redux";
 import {removeFromCart, selectCurrentCart, removeOneFromItem} from "./cartSlice";
@@ -7,13 +8,7 @@ export const Cart = () =>{
     const currentCart = useSelector(selectCurrentCart);
     const dispatch = useDispatch();
 
-    function displayImagesURL(item){
-        let bob = '';
-        for(let i = 0; i < item.array_imgURL.length; i++){
-         bob += item.array_imgURL[i];
-        }
-        return bob;
-    }
+    console.log(currentCart);
 
     return(
         <ul>
@@ -28,7 +23,6 @@ export const Cart = () =>{
                     {item.secundaryGameType}<br />
                     {item.terciaryGameType}<br />
                     {item.duration}<br />
-                    {item.array_imgURL ? displayImagesURL(item) : <br />}<br />
                     {item.quantity}
                     <button onClick = {() =>{
                         dispatch(removeFromCart(item));

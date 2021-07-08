@@ -12,9 +12,8 @@ export const currentUserSlice = createSlice({
     },
     reducers: {
         login: (state, action) => {
-            console.log(state.currentUser.user);
-            console.log(action.payload);
-            state.currentUser.user = action.payload;
+            state.currentUser.user.id = action.payload.id;
+            state.currentUser.user.user = action.payload.username;
         },
         logout: (state, action) => {
             state.currentUser.user = { id: 1, userName: "Guest" };

@@ -13,7 +13,6 @@ export const cartSlice = createSlice({
                 secundaryGameType: "",
                 terciaryGameType: "",
                 duration: 60,
-                array_imgURL: ["imageURL0", "imageURL1"],
                 quantity: 1
             },
             {
@@ -25,7 +24,6 @@ export const cartSlice = createSlice({
                 secundaryGameType: "tactical",
                 terciaryGameType: "decadent",
                 duration: 90,
-                array_imgURL: ["imageURL0", "imageURL1"],
                 quantity: 1
             },
             {
@@ -37,7 +35,6 @@ export const cartSlice = createSlice({
                 secundaryGameType: "boring",
                 terciaryGameType: "",
                 duration: 180,
-                array_imgURL: ["imageURL0", "imageURL1"],
                 quantity: 1
             }
             ]
@@ -52,7 +49,9 @@ export const cartSlice = createSlice({
                 }
             }
             if(!itemFound){
-                state.cart.push(action.payload);
+                let newItem = {...action.payload};
+                newItem.quantity = 1;
+                state.cart.push(newItem);
             }
             
         },

@@ -36,6 +36,7 @@ export const StorePage = () =>{
                         {item.duration}<br />
                         {item.array_imgURL ? displayImagesURL(item) : <p></p>}
                         <button onClick = {() =>{
+                            console.log(item);
                             dispatch(addToCart(item));
                         }}>Add To Cart</button><br />
                         <Link to ={`/items/${item.id}`}><button>View Item</button></Link>
