@@ -19,26 +19,29 @@ export const LoginPage = () =>{
     }
     const tryLogin = async (e) =>{
         e.preventDefault();
-        
-        console.log(name);
-        console.log(password);
         const user = {
             "username": name,
             "password": password
         }
         
-        console.log(JSON.stringify(user));
         const response = await fetch("http://localhost:5000/auth/login",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify(user),
+            credentials: 'include'
+            
         });
         const toJson = await response.json();
         console.log(toJson);
         dispatch(login(toJson));
         console.log(currentUser);
+        
+        if(toJson.username){
+            ///window.open("http://localhost:3000/", "_self");
+            console.log(toJson);
+        }
     }
 
     const googleLogin = async(e) =>{

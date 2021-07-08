@@ -9,10 +9,13 @@ export default function Context(props){
 
   useEffect(async() =>{
     await axios.get("http://localhost:5000/getuser", {withCredentials: true}).then((res) =>{
+      console.log(res.data);
       if(res.data){
         setUserObject(res.data);
       }
     })
+
+    console.log("finished");
   }, [])
   return(
     <myContext.Provider value={userObject}>{props.children}</myContext.Provider>

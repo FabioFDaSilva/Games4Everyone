@@ -7,8 +7,8 @@ import {Cart} from './features/cart/cart';
 import {ProfilePage} from './features/profile/profile';
 import {BrowserRouter, Route, Switch, NavLink} from 'react-router-dom';
 import './App.css';
-import {useSelector} from "react-redux";
-import {selectCurrentUser} from "./features/currentUser/currentUserSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {selectCurrentUser, login, logout} from "./features/currentUser/currentUserSlice";
 import { ItemPage } from './features/itemPage/itemPage';
 import logo from "./resources/images/logo.png";
 import { myContext } from './Context';
@@ -19,7 +19,7 @@ import { current } from '@reduxjs/toolkit';
 function App() {
   
   const url = "http://localhost:3000/"
-
+  const dispatch = useDispatch();
   const tryLogout = async (e) =>{
     e.preventDefault();
 
@@ -27,22 +27,27 @@ function App() {
       withCredentials: true
     }).then(res=>{
       if(res.data === "Done"){
+        dispatch(logout());
         window.location.href = "/"
       }
     })
   }
 
+
   const userObject = useContext(myContext);
   const currentUser = useSelector(selectCurrentUser);
 
-  const isLoggedIn= () =>{
+
+  const isLoggedIn= (currentUser, userObject) =>{
+    console.log(userObject);
     console.log(currentUser);
-      if (!userObject && currentUser.username !== "Guest"){
-          return (<NavLink exact to='/loginPage'><button>Login</button></NavLink>)
+      if (!userObject && currentUser.user.username === "Guest"){
+        return (<NavLink exact to='/loginPage'><button>Login</button></NavLink>);
       }
       else{
           return(
               <div>
+                
                   <NavLink exact to="/profile"><button>Profile</button></NavLink>
                   <NavLink exact to='/logout'><button onClick={tryLogout}>Logout</button></NavLink>
               </div>
@@ -78,7 +83,7 @@ function App() {
           </div>
           <div className="rightAlign">
             <NavLink exact to='/cart'><button>Cart</button></NavLink>
-            {isLoggedIn()}
+            {isLoggedIn(currentUser, userObject)}
           </div>
 
           </nav>

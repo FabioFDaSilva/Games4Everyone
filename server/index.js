@@ -4,8 +4,6 @@ const gamesRoutes = require('./routes/games-routes');
 const userRoutes = require('./routes/user-routes');
 const ordersRoutes = require('./routes/orders-routes');
 const order_itemsRoutes = require('./routes/order_items-routes');
-const app = express();
-const port = 5000;
 const cors = require("cors");
 const pool = require("./db");
 const passport = require('passport');
@@ -14,6 +12,9 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const keys = require('./config/keys');
 const bcrypt = require('bcrypt');
+
+const app = express();
+const port = 5000;
 
 require('./config/passport-setup');
 
@@ -30,6 +31,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/auth', authRoutes);
@@ -40,23 +42,36 @@ app.use('/orders', ordersRoutes);
 
 
 passport.serializeUser(function (user, done) {
+
     console.log("serialize user");
+    console.log(user.id);
     done(null, user.id);
 });
 
 passport.deserializeUser(async function (id, done) {
     try {
-        console.log("deserialize user");
-        const googleUser = await pool.query("SELECT * FROM google_users WHERE id = $1", [id]);
-        const localUser = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+        console.log("deserialize User");
+        let googleUser = await pool.query("SELECT * FROM google_users WHERE id = $1", [id]);
 
-        if(googleUser.rowCount > 0){
-            
+        if (googleUser.rowCount > 0) {
+            console.log("it's a google user");
             done(null, googleUser);
         }
-        else if (localUser.rowCount > 0){
-            done(null, localUser);
+
+        let localUser;
+        if (Number.isInteger(id)) {
+            console.log("Yep");
+            localUser = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+            if (localUser.rowCount > 0) {
+                console.log("it's a local user");
+                done(null, localUser);
+            }
         }
+
+        console.log(localUser);
+
+
+
     } catch (err) {
         console.error(err.message);
     }
@@ -64,35 +79,30 @@ passport.deserializeUser(async function (id, done) {
 
 });
 
-const authenticateUser = async (username, password, done) => {
-    const user = await pool.query("SELECT * FROM users WHERE username = $1",[username]);
-    
-    
-    const userInfo = {
-        id: user.rows[0].id,
-        username: user.rows[0].username
-    }
-    console.log(userInfo);
-    if (user.rowCount < 1) {
-        console.log("woops, rowcown < 1");
-        return done(null, false, { message: "No user with that username" });
-    }
-    try {
-        console.log("compare passwords");
-        if (await bcrypt.compare(password, user.rows[0].password)) {
-            console.log("they match");
-            return done(null, userInfo);
-        } else {
-            console.log("they don't");
-            return done(null, false, { message: "Password doesn't match!" });
+passport.use(new LocalStrategy({
+    callbackURL: "/auth/login/redirect"
+},
+    async (username, password, cb) => {
+        const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
+        if (user.rowCount < 1) {
+            console.log("No user found!");
+            return cb(null, false);
         }
-    } catch (e) {
-        console.log("error");
-        return done(e);
+        try {
+            console.log("user found, comparing passwords");
+            if (await bcrypt.compare(password, user.rows[0].password)) {
+                console.log(`password matches, returning user`);
+                console.log(user.rows[0]);
+                return cb(null, user.rows[0]);
+            } else {
+                console.log(`passwords don't match!`);
+                return cb(null, false);
+            }
+        } catch (e) {
+            return cb(e);
 
-    }
-}
-passport.use(new LocalStrategy({}, authenticateUser));
+        }
+    }));
 
 
 
@@ -105,15 +115,17 @@ passport.use(new GoogleStrategy({
     async (accessToken, refreshToken, profile, cb) => {
         try {
             // Check if user exists
+            console.log("find user");
             const user = await pool.query("SELECT * FROM google_users WHERE id = $1", [profile.id])
-            console.log(user);
             // If no user found, create new user
             if (user.rowCount === 0) {
+                console.log("no user");
                 const newUser = await pool.query("INSERT INTO google_users VALUES ($1,$2) RETURNING *", [profile.id, profile.displayName]);
                 return cb(null, newUser);
             }
+            console.log("user already exists, return profile");
             // User already exists, return profile
-            return cb(null, user);
+            return cb(null, profile);
         } catch (err) {
             console.log("error:");
             console.error(err.message);
@@ -121,6 +133,8 @@ passport.use(new GoogleStrategy({
     }));
 
 app.get("/getUser", (req, res, next) => {
+    console.log("trying to get user");
+    console.log(req.user);
     res.send(req.user);
 });
 
