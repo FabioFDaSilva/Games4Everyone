@@ -45,9 +45,11 @@ function App() {
         return (<NavLink exact to='/loginPage'><button>Login</button></NavLink>);
       }
       else{
+        if(window.location.href === "http://localhost:3000/loginPage"){
+          window.location = "http://localhost:3000";
+        }
           return(
               <div>
-                
                   <NavLink exact to="/profile"><button>Profile</button></NavLink>
                   <NavLink exact to='/logout'><button onClick={tryLogout}>Logout</button></NavLink>
               </div>
