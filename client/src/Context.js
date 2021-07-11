@@ -12,6 +12,10 @@ export default function Context(props){
       console.log(res.data);
       if(res.data){
         setUserObject(res.data);
+      }else{
+        if(localStorage.getItem("cartState")){
+          localStorage.removeItem("cartState");
+        }
       }
     })
 

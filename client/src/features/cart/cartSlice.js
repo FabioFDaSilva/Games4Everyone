@@ -3,41 +3,7 @@ import { createSlice } from "@reduxjs/toolkit"
 export const cartSlice = createSlice({
     name: "cart",
     initialState: {
-        cart: [
-             {
-                id: 0,
-                gameName: "genericGame",
-                price: 2,
-                description: "this is a game",
-                mainGameType: "strategy",
-                secundaryGameType: "",
-                terciaryGameType: "",
-                duration: 60,
-                quantity: 1
-            },
-            {
-                id: 1,
-                gameName: "genericGame1",
-                price: 3,
-                description: "this is a game1",
-                mainGameType: "strategy",
-                secundaryGameType: "tactical",
-                terciaryGameType: "decadent",
-                duration: 90,
-                quantity: 1
-            },
-            {
-                id: 2,
-                gameName: "genericGame2",
-                price: 4,
-                description: "this is a game2",
-                mainGameType: "strategy",
-                secundaryGameType: "boring",
-                terciaryGameType: "",
-                duration: 180,
-                quantity: 1
-            }
-            ]
+        cart: []
     },
     reducers: {
         addToCart: (state, action) =>{
@@ -66,6 +32,10 @@ export const cartSlice = createSlice({
                     state.cart[i].quantity -= 1;
                 }
             }
+        },
+
+        updateCart: (state, action) =>{
+            state.cart = action.payload;
         }
     },
 
@@ -73,5 +43,5 @@ export const cartSlice = createSlice({
 
 
 export const selectCurrentCart = (state) => state.cart.cart;
-export const {addToCart, removeFromCart, removeOneFromItem} = cartSlice.actions;
+export const {addToCart, removeFromCart, removeOneFromItem, updateCart} = cartSlice.actions;
 export default cartSlice.reducer;

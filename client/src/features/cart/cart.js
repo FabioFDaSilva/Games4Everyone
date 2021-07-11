@@ -1,19 +1,22 @@
 import { current } from "@reduxjs/toolkit";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import {removeFromCart, selectCurrentCart, removeOneFromItem} from "./cartSlice";
+import { myContext } from '../../Context';
+import { removeFromCart, selectCurrentCart, removeOneFromItem } from "./cartSlice";
+import { useContext } from 'react';
 
 
-export const Cart = () =>{
+export const Cart = () => {
     const currentCart = useSelector(selectCurrentCart);
     const dispatch = useDispatch();
 
-    console.log(currentCart);
+    const currentDisplayedCart = JSON.stringify(useSelector(selectCurrentCart));
+    const userObject = useContext(myContext);
 
-    return(
-        <ul>
-            {Object.values(currentCart).map((item) =>(
-                <li className="item" key={item.id}>
+
+    const displayCart = () => {
+        return Object.values(currentCart).map((item) => (
+            <li className="item" key={item.id}>
                 <div>
                     {item.id}<br />
                     {item.name}<br />
@@ -24,16 +27,23 @@ export const Cart = () =>{
                     {item.terciaryGameType}<br />
                     {item.duration}<br />
                     {item.quantity}
-                    <button onClick = {() =>{
+                    <button onClick={() => {
                         dispatch(removeFromCart(item));
                     }}>Remove</button>
 
-                    {item.quantity > 1 ? <button onClick = { () =>{
-                        dispatch(removeOneFromItem(item))}}>-1</button> : <br />}
+                    {item.quantity > 1 ? <button onClick={() => {
+                        dispatch(removeOneFromItem(item))
+                    }}>-1</button> : <br />}
                 </div>
-
             </li>
-            ))}
+        ))
+    }
+    return (
+        <ul>
+            {
+                currentCart.length > 0 ? displayCart() :
+                    <h1>Cart is empty!</h1>
+            }
         </ul>
     )
 }
