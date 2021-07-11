@@ -2,7 +2,7 @@ import { current } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { myContext } from '../../Context';
-import { removeFromCart, selectCurrentCart, removeOneFromItem } from "./cartSlice";
+import { removeFromCart, selectCurrentCart, removeOneFromItem, updateCart } from "./cartSlice";
 import { useContext } from 'react';
 
 
@@ -83,7 +83,13 @@ export const Cart = () => {
                 if (itemsAdded) {
                     console.log("items were added");
                     alert("Order Complete");
+                    
                     window.open("http://localhost:3000/profile", "_self");
+                    
+                    if(localStorage.getItem("cartState")){
+                        localStorage.removeItem("cartState");
+                        dispatch(updateCart([]));
+                      }
                 }
             }
         }
