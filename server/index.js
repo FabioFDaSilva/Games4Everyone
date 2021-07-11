@@ -64,7 +64,7 @@ passport.deserializeUser(async function (id, done) {
 
         let localUser;
         if (Number.isInteger(id)) {
-            console.log("Yep");
+            console.log("number is integer");
             localUser = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
             if (localUser.rowCount > 0) {
                 console.log("it's a local user");

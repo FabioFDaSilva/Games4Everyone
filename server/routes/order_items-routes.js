@@ -39,7 +39,8 @@ router.put("/", async (req, res, next) => {
 
 router.get("/:id", async(req,res,next) =>{
     try {
-        const fetchedOrderItem = await pool.query("SELECT * FROM order_items WHERE id = $1", [req.params]);
+        const {id} = req.params;
+        const fetchedOrderItem = await pool.query("SELECT * FROM order_items WHERE id = $1", [id]);
         res.json(fetchedOrderItem);
     } catch (err) {
         console.error(err.message)

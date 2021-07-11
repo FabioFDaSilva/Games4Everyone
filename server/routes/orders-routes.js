@@ -29,11 +29,14 @@ router.post("/", async (req, res, next) => {
 });
 
 //Get existing order
-router.get("/:id", async (req, res, next) => {
+router.get("/:user_id", async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const myOrder = await pool.query("SELECT * FROM orders WHERE id = $1", [id]);
+        const { user_id } = req.params;
+
+        const myOrder = await pool.query("SELECT * FROM orders WHERE user_id = $1", [user_id]);
+        console.log("getOrders");
         res.json(myOrder);
+
     } catch (err) {
         console.error(err.message);
     }

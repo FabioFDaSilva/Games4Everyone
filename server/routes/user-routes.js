@@ -10,7 +10,7 @@ router.post("/", async (req, res, next) => {
         const checkUsernameAvailability = await pool.query("SELECT username FROM users WHERE username = $1", [req.body.username]);
 
         if (checkUsernameAvailability.rowCount === 0 && req.body.username !== "Guest") {
-            const newUser = await pool.query("INSERT INTO users VALUES($1, $2, $3) RETURNING *", [req.body.username, hashedPassword, req.body.address]);
+            const newUser = await pool.query("INSERT INTO users(username, password, address) VALUES($1, $2, $3) RETURNING *", [req.body.username, hashedPassword, req.body.address]);
             res.json(newUser);
         }else{
             res.json("Username taken");
