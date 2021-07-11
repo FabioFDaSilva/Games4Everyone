@@ -44,14 +44,18 @@ app.use('/orders', ordersRoutes);
 passport.serializeUser(function (user, done) {
 
     console.log("serialize user");
-    console.log(user.id);
-    done(null, user.id);
+    if(user.google_user_id){
+        done(null, user.google_user_id);
+    }
+     done(null, user.id);
+
+
 });
 
 passport.deserializeUser(async function (id, done) {
     try {
         console.log("deserialize User");
-        let googleUser = await pool.query("SELECT * FROM google_users WHERE id = $1", [id]);
+        let googleUser = await pool.query("SELECT * FROM google_users WHERE google_user_id = $1", [id]);
 
         if (googleUser.rowCount > 0) {
             console.log("it's a google user");
@@ -67,11 +71,6 @@ passport.deserializeUser(async function (id, done) {
                 done(null, localUser);
             }
         }
-
-        console.log(localUser);
-
-
-
     } catch (err) {
         console.error(err.message);
     }
@@ -92,7 +91,6 @@ passport.use(new LocalStrategy({
             console.log("user found, comparing passwords");
             if (await bcrypt.compare(password, user.rows[0].password)) {
                 console.log(`password matches, returning user`);
-                console.log(user.rows[0]);
                 return cb(null, user.rows[0]);
             } else {
                 console.log(`passwords don't match!`);
@@ -116,12 +114,13 @@ passport.use(new GoogleStrategy({
         try {
             // Check if user exists
             console.log("find user");
-            const user = await pool.query("SELECT * FROM google_users WHERE id = $1", [profile.id])
+            const user = await pool.query("SELECT * FROM google_users WHERE google_user_id = $1", [profile.id])
             // If no user found, create new user
             if (user.rowCount === 0) {
                 console.log("no user");
-                const newUser = await pool.query("INSERT INTO google_users VALUES ($1,$2) RETURNING *", [profile.id, profile.displayName]);
-                return cb(null, newUser);
+                const newUser = await pool.query("INSERT INTO google_users(display_name, google_user_id) VALUES ($1,$2) RETURNING *", [profile.displayName, profile.id]);
+                console.log("user created");
+                return cb(null, newUser.rows[0]);
             }
             console.log("user already exists, return profile");
             // User already exists, return profile
@@ -134,7 +133,6 @@ passport.use(new GoogleStrategy({
 
 app.get("/getUser", (req, res, next) => {
     console.log("trying to get user");
-    console.log(req.user);
     res.send(req.user);
 });
 

@@ -7,20 +7,17 @@ router.post("/", async (req, res, next) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         console.log(hashedPassword);
-        const totalIDs = await pool.query("SELECT COUNT (*) FROM users");
-        var newID = Math.floor(Math.random() * 1000000);
-        console.log(newID);
-        const verifyEmptyIDSpot = await pool.query("SELECT username FROM users where id = $1", [newID]);
+        const checkUsernameAvailability = await pool.query("SELECT username FROM users WHERE username = $1", [req.body.username]);
 
-        while (verifyEmptyIDSpot.rowCount > 0){
-            newID = Math.floor(Math.random() * 1000000);
+        if (checkUsernameAvailability.rowCount === 0 && req.body.username !== "Guest") {
+            const newUser = await pool.query("INSERT INTO users VALUES($1, $2, $3) RETURNING *", [req.body.username, hashedPassword, req.body.address]);
+            res.json(newUser);
+        }else{
+            res.json("Username taken");
         }
-        const newUser = await pool.query("INSERT INTO users VALUES($1, $2, $3, $4) RETURNING *", [newID, req.body.username, hashedPassword, req.body.address]);
-        res.json(newUser);
 
     } catch (err) {
         console.error(err.message);
-
     }
 })
 
@@ -28,7 +25,7 @@ router.post("/", async (req, res, next) => {
 
 router.post("/:id"), async (req, res, next) => {
     try {
-        const getUser = await pool.query("SELECT * FROM users WHERE id = $1", [req.body.id]);
+        const getUser = await pool.query("SELECT * FROM users WHERE id = $1 RETURNING ", [req.body.id]);
         res.json(getUser);
     } catch (err) {
         console.error(err.message);

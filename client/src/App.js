@@ -34,14 +34,10 @@ function App() {
   }
 
 
-
-
-
   const userObject = useContext(myContext);
   const currentUser = useSelector(selectCurrentUser);
 
   useEffect(() => {
-    console.log(localStorage.storeState);
     if (localStorage.getItem("storeState")) {
       const parsedStoreStateGames = JSON.parse(localStorage.storeState);
       dispatch(updateGameList(parsedStoreStateGames));
@@ -61,8 +57,6 @@ function App() {
   }, [userObject]);
 
   const isLoggedIn = (currentUser, userObject) => {
-    console.log(userObject);
-    console.log(currentUser);
     if (!userObject) {
       if(window.location.href === "http://localhost:3000/cart"){
         window.location = "http://localhost:3000"

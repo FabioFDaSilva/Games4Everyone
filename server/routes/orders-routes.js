@@ -4,10 +4,24 @@ const pool = require("../db");
 
 router.post("/", async (req, res, next) => {
     try {
+        if (Number.isInteger(req.body.user_id)) {
+            const checkIdForLocal = await pool.query("SELECT id FROM users WHERE id = $1", [req.body.user_id]);
 
-        const newOrder = await pool.query("INSERT INTO orders VALUES ($1, $2, $3, $4, $5)", [req.body.id, req.body.user_id, req.body.order_items_id, req.body.address, req.body.price]);
+            if (checkIdForLocal.rowCount > 0) {
+                const newOrder = await pool.query("INSERT INTO orders(user_id, address, price) VALUES ($1, $2, $3) RETURNING id", [req.body.user_id.toString(), req.body.address, req.body.price]);
+                res.json(newOrder);
+            }
+        } else {
+            const checkIdForGoogle = await pool.query("SELECT google_user_id FROM google_users WHERE google_user_id = $1", [req.body.user_id]);
 
-        res.json(newOrder);
+            if (checkIdForGoogle.rowCount > 0) {
+                const newOrder = await pool.query("INSERT INTO orders(user_id, address, price) VALUES ($1, $2, $3) RETURNING id", [req.body.user_id, req.body.address, req.body.price]);
+                res.json(newOrder);
+            }
+        }
+
+
+
     } catch (error) {
         console.error(error.message);
 

@@ -37,11 +37,6 @@ export const LoginPage = () =>{
         console.log(toJson);
         dispatch(login(toJson));
         console.log(currentUser);
-        
-        if(toJson.username){
-            ///window.open("http://localhost:3000/", "_self");
-            console.log(toJson);
-        }
     }
 
     const googleLogin = async(e) =>{
