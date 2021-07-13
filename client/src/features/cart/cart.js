@@ -84,6 +84,10 @@ export const Cart = () => {
                     console.log("items were added");
                     alert("Order Complete");
                     
+                    if(sessionStorage.getItem("userGames")){
+                        sessionStorage.removeItem("userGames");
+                        sessionStorage.removeItem("userOrders");
+                    }
                     window.open("http://localhost:3000/profile", "_self");
                     
                     if(localStorage.getItem("cartState")){

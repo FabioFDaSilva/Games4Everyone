@@ -12,8 +12,13 @@ export const currentUserSlice = createSlice({
     },
     reducers: {
         login: (state, action) => {
-            state.currentUser.user.id = action.payload.id;
-            state.currentUser.user.user = action.payload.username;
+            try {
+                state.currentUser.user.id = action.payload.id;
+                state.currentUser.user.username = action.payload.username;
+            } catch (err) {
+                console.error(err.message);
+            }
+
         },
         logout: (state, action) => {
             state.currentUser.user = { id: 1, userName: "Guest" };
@@ -23,5 +28,5 @@ export const currentUserSlice = createSlice({
 })
 
 export const selectCurrentUser = (state) => state.currentUser.currentUser;
-export const {login, logout} = currentUserSlice.actions;
+export const { login, logout } = currentUserSlice.actions;
 export default currentUserSlice.reducer;

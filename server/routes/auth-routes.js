@@ -25,7 +25,7 @@ router.post('/login', passport.authenticate('local', {
             return;
         }
         console.log("Trying to save");
-        res.status(200).json({errors: false, user: req.user});
+        res.status(200).json({user: req.user});
     });
 });
 

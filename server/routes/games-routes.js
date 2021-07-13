@@ -7,7 +7,7 @@ router.get("/:id", async (req, res, next) => {
         const { id } = req.params;
         const newItem = await pool.query("SELECT * FROM games WHERE id = $1", [id]);
         res.json(newItem);
-
+        
     } catch (err) {
         console.error(err.message);
     }

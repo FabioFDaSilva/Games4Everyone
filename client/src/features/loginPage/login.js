@@ -3,7 +3,8 @@ import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {selectCurrentUser, login} from "../currentUser/currentUserSlice";
 import {Signup} from '../signup/signup';
-
+import { useContext } from 'react';
+import { myContext } from '../../Context';
 
 export const LoginPage = () =>{
     const [name, setName] = React.useState("");
@@ -11,6 +12,7 @@ export const LoginPage = () =>{
 
     const currentUser = useSelector(selectCurrentUser);
     const dispatch = useDispatch();
+    const userObject = useContext(myContext);
     const handleUsernameChange = (e) =>{
         setName(e.target.value);
     }
@@ -34,9 +36,10 @@ export const LoginPage = () =>{
             
         });
         const toJson = await response.json();
-        console.log(toJson);
-        dispatch(login(toJson));
-        console.log(currentUser);
+        if(dispatch(login(toJson))){
+            window.open("http://localhost:3000/", "_self");
+        }
+        
     }
 
     const googleLogin = async(e) =>{
