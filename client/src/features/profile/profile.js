@@ -15,6 +15,7 @@ export const ProfilePage = () => {
     let totalOrders = [];
     let totalOrderItems = [];
     let gamesArray = [];
+    const [currentGamesInOrder, setGamesInOrder] = useState({})
     const [currentGames, setCurrentGames] = useState([{}]);
     const [currentOrders, setCurrentOrders] = useState([[{}]]);
     const [currentOrderItems, setCurrentOrderItems] = useState([{}]);
@@ -70,22 +71,16 @@ export const ProfilePage = () => {
     }
 
     useEffect(async () => {
-        /* if (sessionStorage.getItem("userOrders") && sessionStorage.getItem("userGames") && sessionStorage.getItem("userOrderItems")) {
-             if(sessionStorage.getItem("userOrders") !== JSON.stringify(totalOrders) &&
-              sessionStorage.getItem("userGames") !== JSON.stringify(gamesArray) &&
-               sessionStorage.getItem("userOrderItems") !== JSON.stringify(totalOrderItems)){
-                 setCurrentGames(gamesArray);
-                 setCurrentOrders(totalOrders);
-                 setCurrentOrderItems(totalOrderItems);
-               }
- 
-         } else {*/
         const fetchData = await getGamesInOrders();
-        if (fetchData) {
-
+        console.log(fetchData);
+        if (fetchData);
+            console.log("this runs!");
+            console.log(gamesArray);
+            console.log(totalOrders);
+            console.log(totalOrderItems);
             setCurrentGames(gamesArray);
-            setCurrentOrders(totalOrders);
-            setCurrentOrderItems(totalOrderItems);
+            //setCurrentOrders(totalOrders);
+            //setCurrentOrderItems(totalOrderItems);
             const parsedCurrentOrderItems = JSON.stringify(totalOrderItems);
             const parsedCurrentGames = JSON.stringify(gamesArray);
             const parsedCurrentOrders = JSON.stringify(totalOrders);
@@ -93,19 +88,19 @@ export const ProfilePage = () => {
             sessionStorage.setItem("userOrders", parsedCurrentOrders);
             sessionStorage.setItem("userGames", parsedCurrentGames);
             sessionStorage.setItem("userOrderItems", parsedCurrentOrderItems);
-        }
-        //}
-
     }, []);
 
 
     const displayGamesInOrder = (order) => {
         let gamesInOrder = [];
+        console.log(totalOrders);
+        console.log(gamesArray);
+        console.log(order.id);
         for(let i in currentGames){
-            for (let j in currentOrderItems){
-                for (let k in currentOrderItems[j]){
-                    if(currentOrderItems[j][k].orders_id === order.id && currentOrderItems[j][k].game_id == currentGames[i].id){
-                        const itemInOrder = {"orderNumber": order.id, "name": currentGames[i].name, "price": currentGames[i].price};
+            for (let j in totalOrderItems){
+                for (let k in totalOrderItems[j]){
+                    if(currentOrderItems[j][k].orders_id === order.id && currentOrderItems[j][k].game_id == gamesArray[i].id){
+                        const itemInOrder = {"orderNumber": order.id, "name": gamesArray[i].name, "price": gamesArray[i].price};
                         gamesInOrder.push(itemInOrder);
                         
                     }
@@ -114,6 +109,7 @@ export const ProfilePage = () => {
             }
             
         }
+        console.log(gamesInOrder);
         return gamesInOrder;
         
         
@@ -122,9 +118,11 @@ export const ProfilePage = () => {
     return (
         <div>
             <h1>Hello {userObject ? (userObject.rows[0].display_name || userObject.rows[0].username) : window.open("http://localhost:3000", "_self")}</h1>
-            <h2>Your orders:</h2>
-            <ul>{currentOrders[0].map((order) => {
+            {currentOrders.length > 1 ? (console.log(currentOrders), <h2>Your orders:</h2>) : <h2>No orders</h2>}
+            <ul>{currentOrders.length > 1 ? currentOrders[0].map((order) => {
+                console.log(currentOrders);
                 if (order.id) {
+                    console.log(order);
                     return (
                         <li key={order.id}>
                             <h3>Order number: {order.id}</h3>
@@ -144,8 +142,9 @@ export const ProfilePage = () => {
                     return (
                         <p>Loading...</p>
                     )
-                }
-            })}
+                } 
+            }) : <p></p>
+        }
 
             </ul>
         </div>

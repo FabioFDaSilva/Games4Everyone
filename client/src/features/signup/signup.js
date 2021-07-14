@@ -24,23 +24,26 @@ export const Signup = () =>{
     const handleAddressChange = (e) =>{
         setAddress(e.target.value);
     }
-    const trySignup = (e) =>{
+    const trySignup = async (e) =>{
         e.preventDefault();
-        console.log(name);
-        console.log(password);
-        console.log(address);
         const user = {
             "username": name,
             "password": password,
             "address": address
         }
-        const newUser = fetch("http://localhost:5000/users", {
+        const newUser = await fetch("http://localhost:5000/users", {
             method: "POST",
             body: JSON.stringify(user),
             headers:{
                 "Content-Type" : "application/json"
             }
         })
+        const response = await newUser.json();
+        if (response.data){
+            window.open("http://localhost:3000/", "_self");
+        }else{
+            alert("Username taken");
+        }
     }
     return(
         <form onSubmit={trySignup}>
