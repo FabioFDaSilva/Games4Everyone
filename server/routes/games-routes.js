@@ -28,6 +28,8 @@ router.post("/", async (req, res, next) => {
         let byTerciaryType = [];
         let byDurationRange = [];
         let byMaxDuration = [];
+        let byDifficultyRange = [];
+        let byMaxDifficulty = [];
 
 
         if (query.name && query.name !== "") {
@@ -54,6 +56,13 @@ router.post("/", async (req, res, next) => {
         if (query.max_duration && query.max_duration !== "") {
             byMaxDuration = await pool.query("SELECT * FROM games WHERE duration < $1", [query.max_duration]);
         }
+        if((query.min_difficulty && query.max_difficulty) && (query.min_difficulty !== "" && query.max_difficulty !== "")){
+            byDifficultyRange = await pool.query("SELECT * FROM games WHERE difficulty < $1 AND difficulty > $2", [query.max_difficulty, query.min_difficulty]);
+        }
+        if(query.max_difficulty && query.max_difficulty !== ""){
+            byMaxDifficulty = await pool.query("SELECT * FROM games WHERE difficulty <$1", [query.max_difficulty]);
+        }
+
 
         ///Make all rows from responses into sets
         const set0 = new Set(byName.rows);
@@ -64,6 +73,8 @@ router.post("/", async (req, res, next) => {
         const set5 = new Set(byTerciaryType.rows);
         const set6 = new Set(byDurationRange.rows);
         const set7 = new Set(byMaxDuration.rows);
+        const set8 = new Set(byDifficultyRange.rows);
+        const set9 = new Set(byMaxDifficulty.rows);
         ///create sets for the IDs
         let set0ID = new Set();
         let set1ID = new Set();
@@ -73,6 +84,8 @@ router.post("/", async (req, res, next) => {
         let set5ID = new Set();
         let set6ID = new Set();
         let set7ID = new Set();
+        let set8ID = new Set();
+        let set9ID = new Set();
 
         ///assign every id in each set to its corresponding setID
         [...set0].map(item => set0ID.add(item.id));
@@ -83,9 +96,11 @@ router.post("/", async (req, res, next) => {
         [...set5].map(item => set5ID.add(item.id));
         [...set6].map(item => set6ID.add(item.id));
         [...set7].map(item => set7ID.add(item.id));
+        [...set8].map(item => set8ID.add(item.id));
+        [...set9].map(item => set9ID.add(item.id));
 
         ///Merge all idsets
-        const idSets = [set0ID, set1ID, set2ID, set3ID, set4ID, set5ID, set6ID, set7ID];
+        const idSets = [set0ID, set1ID, set2ID, set3ID, set4ID, set5ID, set6ID, set7ID, set8ID, set9ID];
 
         ///Filter out anything that is empty
         const nonEmptySets = idSets.filter(s => s.size > 0);
@@ -94,6 +109,7 @@ router.post("/", async (req, res, next) => {
         let commonElements;
 
         console.log(nonEmptySets.length);
+        console.log(nonEmptySets);
         if (nonEmptySets.length > 0) {
             commonElements = nonEmptySets.reduce((setA, setB) => {
                 const intersection = new Set();
@@ -108,7 +124,7 @@ router.post("/", async (req, res, next) => {
 
 
         ///Create a set of game objects
-        const objectSets = [set0, set1, set2, set3, set4, set5, set6, set7];
+        const objectSets = [set0, set1, set2, set3, set4, set5, set6, set7, set8, set9];
         ///Filter out empty ones
         const nonEmptyObjectSets = objectSets.filter(s => s.size > 0);
         ///Organize them based on size

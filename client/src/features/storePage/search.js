@@ -16,7 +16,10 @@ export const Search = () =>{
                 "main_game_type": e.target[3].value,
                 "secundary_game_type": e.target[4].value,
                 "terciary_game_type" : e.target[5].value,
-                "max_duration": e.target[6].value
+                "min_duration": e.target[6].value,
+                "max_duration": e.target[7].value,
+                "max_difficulty": e.target[8].value,
+                "min_difficulty": e.target[9].value
             }
 
             console.log(JSON.stringify(body));
@@ -40,13 +43,16 @@ export const Search = () =>{
     return(
         <div>
             <form id="searchfrm" onSubmit={onSubmitForm}>
-                Name: <input type="search" placeholder="Search Name" id="nameSearch"></input>
-                Max Price: <input type="search" placeholder="Max"  id="maxPriceSearch"></input>
-                Min Price: <input type="search" placeholder="Min"  id="minPriceSearch"></input>
-                Main Game Type: <input type="search" placeholder="Main Game Type" id="mGTypeSearch"></input>
-                Secundary Game Type: <input type="search" placeholder="Secundary Game Type" id="sGTypeSearch"></input>
-                Terciary Game Type: <input type="search" placeholder="Terciary Game Type" id="tGTypeSearch"></input>
-                Max Duration: <input type="search" placeholder="Max" id="maxDurationSearch"></input>
+                Name: <input type="search" placeholder="Search For A Game Name" id="nameSearch"></input>
+                Max Price: <input type="search" placeholder="In Dollars"  id="maxPriceSearch"></input>
+                Min Price: <input type="search" placeholder="In Dollars"  id="minPriceSearch"></input>
+                Main Game Type: <input type="search" placeholder="Strategy, Card Game " id="mGTypeSearch"></input>
+                Secundary Game Type: <input type="search" placeholder="Fighting, City Building" id="sGTypeSearch"></input>
+                Terciary Game Type: <input type="search" placeholder="Manufacturing, Deduction" id="tGTypeSearch"></input>
+                Min Duration: <input type="search" placeholder="In Minutes" id="minDurationSearch"></input>
+                Max Duration: <input type="search" placeholder="In Minutes" id="maxDurationSearch"></input>
+                Max Difficulty: <input type="search" placeholder="1 to 5, 5 being hard" id="maxDifficultySearch"></input>
+                Min Difficulty: <input type="search" placeholder="1 to 5, 1 being easy" id="minDifficulty"></input>
                 <button>Search</button>
             </form>
         </div>

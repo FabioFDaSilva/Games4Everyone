@@ -13,13 +13,12 @@ import { ItemPage } from './features/itemPage/itemPage';
 import logo from "./resources/images/logo.png";
 import { myContext } from './Context';
 import axios from 'axios';
-import { updateGameList } from "./features/storePage/storepageSlice";
+import {selectCurrentGames, updateGameList } from "./features/storePage/storepageSlice";
 import { updateCart } from "./features/cart/cartSlice";
 
 
 function App() {
 
-  const url = "http://localhost:3000/"
   const dispatch = useDispatch();
 
   const tryLogout = async (e) => {
@@ -58,7 +57,7 @@ function App() {
 
   const isLoggedIn = (currentUser, userObject) => {
     if (!userObject) {
-      if(window.location.href === "http://localhost:3000/cart"){
+      if (window.location.href === "http://localhost:3000/cart") {
         window.location = "http://localhost:3000"
       }
       return (<NavLink exact to='/loginPage'><button>Login</button></NavLink>);
@@ -77,19 +76,38 @@ function App() {
     }
   }
 
-  async function handleChange(e) {
-    const data = e.target.value;
-    const response = await fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-    const jsonValue = await response.json();
-    console.log(jsonValue);
+  const onSubmitSearchForm = async e => {
+    e.preventDefault();
+    try {
+      const body = {
+        "name": e.target[0].value
+      }
+
+      console.log(JSON.stringify(body));
+      const response = await fetch("http://localhost:5000/games", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+
+      const result = await response.json();
+      console.log(result);
+      if (result !== "No Items Found") {
+        dispatch(updateGameList(result));
+        window.location = "http://localhost:3000/store";
+      }else{
+        alert("No games found with that name");
+      }
+    } catch (err) {
+      console.error(err.message);
+    }
   }
+  const currentDisplayedGames = JSON.stringify(useSelector(selectCurrentGames));
+  useEffect( () =>{
+    const { storeState } = { storeState: currentDisplayedGames };
+    localStorage.setItem('storeState', storeState);
+});
+
   return (
 
     <BrowserRouter>
@@ -100,8 +118,11 @@ function App() {
             <NavLink exact to='/'><button>Home</button></NavLink>
             <NavLink exact to='/store'><button>Store</button></NavLink>
           </div>
-          <div className="centerAlign">
-            <input type="search" placeholder="Search" id="searchBar" onChange={handleChange}></input>
+          <div>
+            <form id="searchfrm" onSubmit={onSubmitSearchForm} className="centerAlign">
+              <input type="search" placeholder="Search For A Game Name" id="searchBar"></input>
+              <button>Search</button>
+            </form>
           </div>
           <div className="rightAlign">
 

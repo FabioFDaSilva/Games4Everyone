@@ -23,14 +23,6 @@ export const StorePage = () => {
         localStorage.setItem('storeState', storeState);
     };
 
-
-    function displayImagesURL(item) {
-        let bob = '';
-        for (let i = 0; i < item.array_imgURL.length; i++) {
-            bob += item.array_imgURL[i];
-        }
-        return bob;
-    }
     const { cartState } = { cartState: currentDisplayedCart };
 
     function dispatchAndAddToLocalStorage(item) {
@@ -55,7 +47,6 @@ export const StorePage = () => {
                             {item.secundary_game_type}<br />
                             {item.terciary_game_type}<br />
                             {item.duration}<br />
-                            {item.array_imgURL ? displayImagesURL(item) : <p></p>}
                             <button onClick={() => {
                                 userObject ?
                                     dispatchAndAddToLocalStorage(item) : window.location = "http://localhost:3000/loginPage";
