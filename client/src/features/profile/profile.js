@@ -114,7 +114,7 @@ export const ProfilePage = () => {
     }, []);
     const displayOrder = (orderObject) => {
         const gameDetails = [];
-
+////////////////////// QUANTITIES NOT BEING ADDED CORRECTLY TO DATABASE!!!!!!!!!! DUDE IF QUANTITIES > 1 MAKE SURE TO CALL THE PUSH MORE THAN ONCE SO IT ADDS MULTIPLE GAMES WTF
         for (let content in orderObject) {
             if (orderObject.hasOwnProperty(content)) {
                 if (orderObject[content].gameName) {
