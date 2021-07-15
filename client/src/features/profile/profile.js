@@ -60,6 +60,7 @@ export const ProfilePage = () => {
         });
 
         const gamesInAllOrders = await Promise.all(allCorrespondingGames);
+        console.log(gamesInAllOrders);
         let customerOrders = [];
 
         function checkIdMatchAndOrderMatch(game, orderItem, order) {
@@ -83,7 +84,7 @@ export const ProfilePage = () => {
                             arrayOfOrderItems.forEach(orderItem => {
                                 const getMatches = checkIdMatchAndOrderMatch(gameInArray, orderItem, order);
                                 if (getMatches) {
-                                    thisOrder[`${gameInArray.id}`] = checkIdMatchAndOrderMatch(gameInArray, orderItem, order);
+                                    thisOrder[`${orderItem.id}`] = checkIdMatchAndOrderMatch(gameInArray, orderItem, order);
                                 }
                             })
                         })
@@ -113,6 +114,7 @@ export const ProfilePage = () => {
         setCurrentOrdersObjects(fetchedData);
     }, []);
     const displayOrder = (orderObject) => {
+        console.log(orderObject);
         const gameDetails = [];
         for (let content in orderObject) {
             if (orderObject.hasOwnProperty(content)) {
