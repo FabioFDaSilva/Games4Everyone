@@ -12,141 +12,141 @@ import { updateCart } from '../cart/cartSlice';
 
 export const ProfilePage = () => {
     const userObject = useContext(myContext);
-    let totalOrders = [];
-    let totalOrderItems = [];
-    let gamesArray = [];
-    const [currentGamesInOrder, setGamesInOrder] = useState({})
-    const [currentGames, setCurrentGames] = useState([{}]);
-    const [currentOrders, setCurrentOrders] = useState([[{}]]);
-    const [currentOrderItems, setCurrentOrderItems] = useState([{}]);
+    let ordersArray = [];
+    const [currentOrdersObjects, setCurrentOrdersObjects] = useState()
 
     const getUserOrders = async () => {
+
         if (userObject.rows[0].google_user_id) {
             const response = await fetch(`http://localhost:5000/orders/${userObject.rows[0].google_user_id}`);
             const toJson = await response.json();
-            totalOrders.push(toJson.rows);
-            return toJson.rows;
+            ordersArray.push(toJson.rows);
         } else {
             const response = await fetch(`http://localhost:5000/orders/${userObject.rows[0].id}`);
             const toJson = await response.json();
-            totalOrders.push(toJson.rows);
-            return toJson.rows;
-        }
+            ordersArray.push(toJson.rows);
+
+        };
+
+        return ordersArray;
     }
 
-    const getOrderItems = async () => {
-
-        const orderIds = await getUserOrders();
-        const promises = await Object.values(orderIds).map(async (order) => {
+    const getOrderItemsInOrders = async () => {
+        const allOrders = await getUserOrders();
+        console.log(allOrders[0]);
+        const allItemOrdersInOrders = await Object.values(allOrders[0]).map(async (order) => {
             const response = await fetch(`http://localhost:5000/order_items/${order.id}`);
             const toJson = await response.json();
-            totalOrderItems.push(toJson.rows);
-            return toJson;
+            return toJson.rows;
         });
 
-        const results = await Promise.all(promises);
-        if (results) {
-            return totalOrderItems;
-        }
+        const results = await Promise.all(allItemOrdersInOrders);
+        return results;
     }
 
     const getGamesInOrders = async () => {
-        const games = await getOrderItems();
-        const promises = await Object.values(games).map(async (game) => {
-            const individualGames = await Object.values(game).map(async (indGame) => {
+        const allOrderItems = await getOrderItemsInOrders();
+        const allCorrespondingGames = Object.values(allOrderItems).map(async (orderItem) => {
+            const matchOrderItemWithGame = Object.values(orderItem).map(async (indGame) => {
                 if (indGame) {
                     const response = await fetch(`http://localhost:5000/games/${indGame.game_id}`);
                     const toJson = await response.json();
-                    gamesArray.push(toJson.rows[0]);
                     return toJson.rows[0];
                 }
             });
-            const results = await Promise.all(individualGames);
+            const results = await Promise.all(matchOrderItemWithGame);
             return results;
 
         });
 
-        const results = await Promise.all(promises);
-        return results;
+        const gamesInAllOrders = await Promise.all(allCorrespondingGames);
+        let customerOrders = [];
+
+        function checkIdMatchAndOrderMatch(game, orderItem, order) {
+            ///if their ID matches, and they match the order ID, add the game as part of that order
+            if (game.id == orderItem.game_id && orderItem.orders_id == order.id) {
+                const thisGame = { "gameName": game.name, "gamePrice": game.price };
+                return thisGame;
+            }
+        }
+        ordersArray[0].forEach(order => {
+            const thisOrder = { "orderID": order.id };
+            ///is there more than one order?
+            if (gamesInAllOrders.length > 1) {
+                ///If so, look into the array
+                gamesInAllOrders.forEach(arrayOfGames => {
+                    ///Then look at the games in the array
+                    arrayOfGames.forEach(gameInArray => {
+                        ///Also look at the order items array
+                        allOrderItems.forEach(arrayOfOrderItems => {
+                            ///Then look into each individual order item
+                            arrayOfOrderItems.forEach(orderItem => {
+                                const getMatches = checkIdMatchAndOrderMatch(gameInArray, orderItem, order);
+                                if (getMatches) {
+                                    thisOrder[`${gameInArray.id}`] = checkIdMatchAndOrderMatch(gameInArray, orderItem, order);
+                                }
+                            })
+                        })
+                    })
+                })
+                /// Otherwise
+            } else {
+                ///Look into the first item of the games array
+                gamesInAllOrders[0].forEach(gameInAllOrders => {
+                    ///Then look into the first item order items array
+                    allOrderItems[0].forEach(orderItem => {
+                        const getMatches = checkIdMatchAndOrderMatch(gameInAllOrders, orderItem, order);
+                        if (getMatches) {
+                            thisOrder[`${gameInAllOrders.id}`] = checkIdMatchAndOrderMatch(gameInAllOrders, orderItem, order);
+                        }
+                    });
+
+                })
+            }
+            customerOrders.push(thisOrder);
+        });
+        return customerOrders;
     }
 
     useEffect(async () => {
-        const fetchData = await getGamesInOrders();
-        console.log(fetchData);
-        if (fetchData);
-            console.log("this runs!");
-            console.log(gamesArray);
-            console.log(totalOrders);
-            console.log(totalOrderItems);
-            setCurrentGames(gamesArray);
-            //setCurrentOrders(totalOrders);
-            //setCurrentOrderItems(totalOrderItems);
-            const parsedCurrentOrderItems = JSON.stringify(totalOrderItems);
-            const parsedCurrentGames = JSON.stringify(gamesArray);
-            const parsedCurrentOrders = JSON.stringify(totalOrders);
-
-            sessionStorage.setItem("userOrders", parsedCurrentOrders);
-            sessionStorage.setItem("userGames", parsedCurrentGames);
-            sessionStorage.setItem("userOrderItems", parsedCurrentOrderItems);
+        const fetchedData = await getGamesInOrders();
+        setCurrentOrdersObjects(fetchedData);
     }, []);
+    const displayOrder = (orderObject) => {
+        const gameDetails = [];
 
-
-    const displayGamesInOrder = (order) => {
-        let gamesInOrder = [];
-        console.log(totalOrders);
-        console.log(gamesArray);
-        console.log(order.id);
-        for(let i in currentGames){
-            for (let j in totalOrderItems){
-                for (let k in totalOrderItems[j]){
-                    if(currentOrderItems[j][k].orders_id === order.id && currentOrderItems[j][k].game_id == gamesArray[i].id){
-                        const itemInOrder = {"orderNumber": order.id, "name": gamesArray[i].name, "price": gamesArray[i].price};
-                        gamesInOrder.push(itemInOrder);
-                        
-                    }
-                    
+        for (let content in orderObject) {
+            if (orderObject.hasOwnProperty(content)) {
+                if (orderObject[content].gameName) {
+                    gameDetails.push(
+                        <div key = {orderObject[content].gameName + orderObject["orderID"]}>
+                            <p>Name: {orderObject[content].gameName}</p>
+                            <p>Price: {orderObject[content].gamePrice}</p>
+                        </div>
+                            
+                    )
                 }
             }
-            
         }
-        console.log(gamesInOrder);
-        return gamesInOrder;
-        
-        
-    }
 
+        console.log(orderObject);
+        return (
+            <ul key={orderObject["orderID"] + orderObject.length}>
+                <li key={orderObject["orderID"]}>
+                    <h3>orderID: {orderObject["orderID"]}</h3>
+                    {gameDetails}
+                </li>
+            </ul>
+
+        )
+    }
     return (
         <div>
             <h1>Hello {userObject ? (userObject.rows[0].display_name || userObject.rows[0].username) : window.open("http://localhost:3000", "_self")}</h1>
-            {currentOrders.length > 1 ? (console.log(currentOrders), <h2>Your orders:</h2>) : <h2>No orders</h2>}
-            <ul>{currentOrders.length > 1 ? currentOrders[0].map((order) => {
-                console.log(currentOrders);
-                if (order.id) {
-                    console.log(order);
-                    return (
-                        <li key={order.id}>
-                            <h3>Order number: {order.id}</h3>
-                            {displayGamesInOrder(order).map((game) =>{
-                                return (
-                                    <div>
-                                        <p>Name:{game.name}</p>
-                                        <p>Price:{game.price}</p>
-                                    </div>
-                                    
-                                )
-                            })
-                        }
-                        </li>
-                    )
-                } else {
-                    return (
-                        <p>Loading...</p>
-                    )
-                } 
-            }) : <p></p>
-        }
-
-            </ul>
+            {currentOrdersObjects ? <h2>Your Orders:</h2> : <h2>You have not ordered anything yet</h2>}
+            {currentOrdersObjects ? currentOrdersObjects.map(orderObject => {
+               return displayOrder(orderObject);
+            }) : <p></p>}
         </div>
     )
 }
