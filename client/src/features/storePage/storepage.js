@@ -3,7 +3,7 @@ import { ItemPage } from '../itemPage/itemPage';
 import { Search } from './search';
 import { useSelector, useDispatch } from "react-redux";
 import { selectCurrentGames, updateGameList } from "./storepageSlice";
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { myContext } from '../../Context';
 import { addToCart, selectCurrentCart } from "../cart/cartSlice";
 import "./storepage.css";
@@ -31,12 +31,15 @@ export const StorePage = () => {
         }
         return bob;
     }
+    const { cartState } = { cartState: currentDisplayedCart };
 
     function dispatchAndAddToLocalStorage(item) {
         dispatch(addToCart(item));
-        const { cartState } = { cartState: currentDisplayedCart };
-        localStorage.setItem('cartState', cartState);
     }
+
+    useEffect (() =>{
+        localStorage.setItem('cartState', cartState);
+    })
     return (
         <section className="storeContainer">
             <ul className="listContainer">

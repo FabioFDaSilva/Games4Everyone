@@ -65,7 +65,7 @@ export const ProfilePage = () => {
         function checkIdMatchAndOrderMatch(game, orderItem, order) {
             ///if their ID matches, and they match the order ID, add the game as part of that order
             if (game.id == orderItem.game_id && orderItem.orders_id == order.id) {
-                const thisGame = { "gameName": game.name, "gamePrice": game.price };
+                const thisGame = { "gameName": game.name, "gamePrice": game.price, "orderItemDBID": orderItem.id };
                 return thisGame;
             }
         }
@@ -114,12 +114,11 @@ export const ProfilePage = () => {
     }, []);
     const displayOrder = (orderObject) => {
         const gameDetails = [];
-////////////////////// QUANTITIES NOT BEING ADDED CORRECTLY TO DATABASE!!!!!!!!!! DUDE IF QUANTITIES > 1 MAKE SURE TO CALL THE PUSH MORE THAN ONCE SO IT ADDS MULTIPLE GAMES WTF
         for (let content in orderObject) {
             if (orderObject.hasOwnProperty(content)) {
                 if (orderObject[content].gameName) {
                     gameDetails.push(
-                        <div key = {orderObject[content].gameName + orderObject["orderID"]}>
+                        <div key = {orderObject[content].orderItemDBID}>
                             <p>Name: {orderObject[content].gameName}</p>
                             <p>Price: {orderObject[content].gamePrice}</p>
                         </div>
@@ -129,9 +128,9 @@ export const ProfilePage = () => {
             }
         }
 
-        console.log(orderObject);
+        console.log(orderObject["orderID"] + gameDetails.length);
         return (
-            <ul key={orderObject["orderID"] + orderObject.length}>
+            <ul key={orderObject["orderID"] + gameDetails.length}>
                 <li key={orderObject["orderID"]}>
                     <h3>orderID: {orderObject["orderID"]}</h3>
                     {gameDetails}

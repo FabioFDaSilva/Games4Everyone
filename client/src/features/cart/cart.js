@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { myContext } from '../../Context';
 import { removeFromCart, selectCurrentCart, removeOneFromItem, updateCart } from "./cartSlice";
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 
 export const Cart = () => {
@@ -16,21 +16,24 @@ export const Cart = () => {
     const addCartItemsToDB = async (orderId) => {
         const parsedStoreCartGames = JSON.parse(localStorage.cartState);
         for (let i = 0; i < parsedStoreCartGames.length; i++) {
-            
             const order_item = {
                 "game_id": parsedStoreCartGames[i].id,
                 "order_id": orderId,
                 "price": parsedStoreCartGames[i].price
-            }
-            const response = await fetch("http://localhost:5000/order_items", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(order_item),
-            });
-            console.log("this runs");
-        }
+            };
+            for (let j = 0; j < parsedStoreCartGames[i]["quantity"]; j++) {
+                const response = await fetch("http://localhost:5000/order_items", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(order_item),
+                })
+
+                console.log(order_item);
+            };
+
+        };
         return true;
     }
 
@@ -39,23 +42,23 @@ export const Cart = () => {
         let totalPrice = 0;
         for (let i = 0; i < parsedStoreCartGames.length; i++) {
             totalPrice += parseInt(parsedStoreCartGames[i].price);
-            
+
         }
         let newOrder = {};
-        if(userObject.rows[0].google_user_id){
+        if (userObject.rows[0].google_user_id) {
             newOrder = {
                 "user_id": userObject.rows[0].google_user_id,
                 "address": userObject.rows[0].address,
                 "price": totalPrice
             }
-        }else{
+        } else {
             newOrder = {
                 "user_id": userObject.rows[0].id,
                 "address": userObject.rows[0].address,
                 "price": totalPrice
             }
         }
-        
+
         const response = await fetch("http://localhost:5000/orders", {
             method: "POST",
             headers: {
@@ -83,21 +86,35 @@ export const Cart = () => {
                 if (itemsAdded) {
                     console.log("items were added");
                     alert("Order Complete");
-                    
-                    if(sessionStorage.getItem("userGames")){
+
+                    if (sessionStorage.getItem("userGames")) {
                         sessionStorage.removeItem("userGames");
                         sessionStorage.removeItem("userOrders");
+                        sessionStorage.removeItem("userOrderItems");
                     }
                     window.open("http://localhost:3000/profile", "_self");
-                    
-                    if(localStorage.getItem("cartState")){
+
+                    if (localStorage.getItem("cartState")) {
                         localStorage.removeItem("cartState");
                         dispatch(updateCart([]));
-                      }
+                    }
                 }
             }
         }
     }
+    const { cartState } = { cartState: currentDisplayedCart };
+    function dispatchAndRemoveFromLocalStorage(item) {
+        dispatch(removeFromCart(item));
+    }
+    function dispatchAndRemoveOneFromLocalStorage(item) {
+        dispatch(removeOneFromItem(item));
+    }
+
+    useEffect(() =>{
+        const { cartState } = { cartState: currentDisplayedCart };
+        localStorage.setItem('cartState', cartState);
+    });
+
 
     const displayCart = () => {
         return (<div>
@@ -114,11 +131,11 @@ export const Cart = () => {
                         {item.duration}<br />
                         {item.quantity}
                         <button onClick={() => {
-                            dispatch(removeFromCart(item));
+                            dispatchAndRemoveFromLocalStorage(item);
                         }}>Remove</button>
 
                         {item.quantity > 1 ? <button onClick={() => {
-                            dispatch(removeOneFromItem(item))
+                            dispatchAndRemoveOneFromLocalStorage(item);
                         }}>-1</button> : <br />}
                     </div>
 
