@@ -1,0 +1,28 @@
+.orderContainer { 
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+
+.orderContainer .orderList{
+  display: flex;
+  flex-direction: column;
+  padding: 1em 1em;
+  list-style: none;
+}
+
+.orderContainer .orderList .order {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self:center;
+  background-color: darkgrey;
+  margin: 0.1em 0.1em;
+  border: 1px solid black;
+  box-shadow: -1px 1px yellow;
+  width: 25%;
+}
+
+.allignCenter{
+  align-self: center;
+}

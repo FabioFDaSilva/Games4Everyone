@@ -6,6 +6,7 @@ import { myContext } from '../../Context';
 import { selectCurrentUser } from "../currentUser/currentUserSlice";
 import { current } from 'immer';
 import { updateCart } from '../cart/cartSlice';
+import './profile.css';
 
 
 
@@ -33,7 +34,6 @@ export const ProfilePage = () => {
 
     const getOrderItemsInOrders = async () => {
         const allOrders = await getUserOrders();
-        console.log(allOrders[0]);
         const allItemOrdersInOrders = await Object.values(allOrders[0]).map(async (order) => {
             const response = await fetch(`http://localhost:5000/order_items/${order.id}`);
             const toJson = await response.json();
@@ -60,7 +60,6 @@ export const ProfilePage = () => {
         });
 
         const gamesInAllOrders = await Promise.all(allCorrespondingGames);
-        console.log(gamesInAllOrders);
         let customerOrders = [];
 
         function checkIdMatchAndOrderMatch(game, orderItem, order) {
@@ -110,48 +109,63 @@ export const ProfilePage = () => {
     }
 
     useEffect(async () => {
-        if(userObject){
+        if (userObject) {
             const fetchedData = await getGamesInOrders();
             setCurrentOrdersObjects(fetchedData);
         }
     }, [userObject]);
 
-    
+
+    const calculateOrderPrice = (orderObject) => {
+        let totalPrice = 0;
+        for (let content in orderObject) {
+            if (orderObject.hasOwnProperty(content)) {
+                if (orderObject[content].gameName) {
+                    const price = Number.parseInt(orderObject[content].gamePrice)
+                    console.log(price);
+                    totalPrice += price;
+                }
+            }
+        }
+        console.log(totalPrice);
+        return totalPrice;
+    }
+
+
     const displayOrder = (orderObject) => {
-        console.log(orderObject);
         const gameDetails = [];
         for (let content in orderObject) {
             if (orderObject.hasOwnProperty(content)) {
                 if (orderObject[content].gameName) {
                     gameDetails.push(
-                        <div key = {orderObject[content].orderItemDBID}>
+                        <div key={orderObject[content].orderItemDBID}>
                             <p>Name: {orderObject[content].gameName}</p>
-                            <p>Price: {orderObject[content].gamePrice}</p>
+                            <p>Price: {orderObject[content].gamePrice} $</p>
                         </div>
-                            
                     )
                 }
             }
         }
 
-        console.log(orderObject["orderID"] + gameDetails.length);
-        return (
-            <ul key={orderObject["orderID"] + gameDetails.length}>
-                <li key={orderObject["orderID"]}>
-                    <h3>orderID: {orderObject["orderID"]}</h3>
-                    {gameDetails}
-                </li>
-            </ul>
-
-        )
-    }
     return (
-        <div>
-            <h1>Hello {userObject ? (userObject.rows[0].display_name || userObject.rows[0].username) : <br/>}</h1>
-            {currentOrdersObjects ? <h2>Your Orders:</h2> : <h2>You have not ordered anything yet</h2>}
-            {currentOrdersObjects ? currentOrdersObjects.map(orderObject => {
-               return displayOrder(orderObject);
-            }) : <p></p>}
-        </div>
+        <ul className="orderList" key={orderObject["orderID"] + gameDetails.length} >
+            <li className="order" key={orderObject["orderID"]}>
+                <h3>orderID: {orderObject["orderID"]}</h3>
+                {gameDetails}
+                <h3>Total Order Price: {calculateOrderPrice(orderObject)}$</h3>
+            </li>
+        </ul>
+
     )
+    }
+
+return (
+    <div className="orderContainer">
+        <h1 className="alignCenter">Hello {userObject ? (userObject.rows[0].display_name || userObject.rows[0].username) : <br />}</h1>
+        {currentOrdersObjects ? <h2 className="alignCenter">Your Orders:</h2> : <h2 className="alignCenter">You have not ordered anything yet</h2>}
+        {currentOrdersObjects ? currentOrdersObjects.map(orderObject => {
+            return displayOrder(orderObject);
+        }) : <p></p>}
+    </div>
+)
 }
