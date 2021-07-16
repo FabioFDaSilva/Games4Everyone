@@ -29,13 +29,6 @@ export const StorePage = () => {
     window.onbeforeunload = () =>{
         localStorage.setItem('storeState', storeState);
     }
-
-    useEffect( () =>{
-        const updatedGameList = localStorage.getItem('storeState');
-        if(userObject){
-            dispatch(updateGameList(updatedGameList))
-        }
-    },[userObject]);
     return (
         <section className="storeContainer">
             <Search />
@@ -47,10 +40,7 @@ export const StorePage = () => {
                                 <h2 className="allignCenter">{item.name}</h2>
                                 <p>Price:  {item.price}$</p>
                                 <p>{item.description}</p>
-                                <button className="addToCartButton" onClick={() => {
-                                userObject ?
-                                    dispatchAndAddToLocalStorage(item) : window.location = "http://localhost:3000/loginPage";
-                            }}>Add To Cart</button><br />
+                                <button className="addToCartButton" onClick={() => {dispatchAndAddToLocalStorage(item)}}>Add To Cart</button><br />
                             </section>
 
 

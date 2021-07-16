@@ -43,14 +43,12 @@ function App() {
       dispatch(updateGameList(parsedStoreStateGames));
     }
 
-    if (userObject) {
-      if (localStorage.getItem("cartState")) {
-        const parsedStoreStateCart = JSON.parse(localStorage.cartState);
-        dispatch(updateCart(parsedStoreStateCart));
-      } 
+    if (localStorage.getItem("cartState")) {
+      const parsedStoreStateCart = JSON.parse(localStorage.cartState);
+      dispatch(updateCart(parsedStoreStateCart));
+    } 
     
-    }
-  }, [userObject]);
+  },[userObject]);
 
   const isLoggedIn = (userObject) => {
     
@@ -100,11 +98,7 @@ function App() {
   
 };
 useEffect( () =>{
-  
-  const { storeState } = { storeState: currentDisplayedGames };
-  localStorage.setItem('storeState', storeState);
-  
-},[userObject])
+})
 
   return (
 

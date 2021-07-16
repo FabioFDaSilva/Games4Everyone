@@ -109,11 +109,14 @@ export const Cart = () => {
     function dispatchAndRemoveOneFromLocalStorage(item) {
         dispatch(removeOneFromItem(item));
     }
-
-    useEffect(() => {
-        const { cartState } = { cartState: currentDisplayedCart };
-        localStorage.setItem('cartState', cartState);
-    }, [currentDisplayedCart]);
+    window.onbeforeunload = () =>{
+       
+        if(localStorage.getItem('cartState')){
+            const { cartState } = { cartState: currentDisplayedCart };
+            dispatch(updateCart(cartState));
+        }
+       
+    }
 
     const calculateTotalPrice = () => {
         let totalPrice = 0;
