@@ -1,0 +1,32 @@
+#loginFormContainer{
+  width: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#loginForm{
+  margin: 10px;
+  padding: 10px 25px;
+  width: 25%;
+  height: 250px;
+  align-self: center;
+  background-color: darkgrey;
+  border: 1px solid black;
+  box-shadow: -1px 1px yellow;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+}
+
+#registerLink{
+  align-self: center;
+}
+#loginButton{
+
+}
+
+#googleLogin {
+  align-self: center;
+  width: 20%;
+}
