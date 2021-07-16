@@ -41,7 +41,8 @@ export const Signup = () =>{
         })
         const response = await newUser.json();
         if (response.data){
-            window.open("http://localhost:3000/", "_self");
+            window.open("http://localhost:3000/loginPage", "_self");
+            alert("User created");
         }else{
             alert("Username taken");
         }

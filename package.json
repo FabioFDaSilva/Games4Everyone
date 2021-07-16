@@ -1,0 +1,31 @@
+{
+  "name": "games4efinal",
+  "version": "1.0.0",
+  "description": "Gameboard e-commerse app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SneakyDragonDS/Games4Everyone.git"
+  },
+  "keywords": [
+    "heroku",
+    "boardgame",
+    "board",
+    "game",
+    "shop",
+    "online",
+    "e-commerce"
+  ],
+  "author": "Fabio Da Silva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SneakyDragonDS/Games4Everyone/issues"
+  },
+  "homepage": "https://github.com/SneakyDragonDS/Games4Everyone#readme",
+  "engines":{
+	  "node":"14.16.0"
+  }
+}

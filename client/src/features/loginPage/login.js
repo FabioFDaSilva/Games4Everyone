@@ -30,13 +30,17 @@ export const LoginPage = () =>{
         const response = await fetch("http://localhost:5000/auth/login",{
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': 'http://localhost:3000'
             },
             body: JSON.stringify(user),
             credentials: 'include'
-            
         });
         const toJson = await response.json();
+        console.log(response);
+        if(!response){
+            alert("User not found");
+        }
         if(dispatch(login(toJson))){
             window.open("http://localhost:3000/", "_self");
         }
