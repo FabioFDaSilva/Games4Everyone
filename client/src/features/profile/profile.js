@@ -110,9 +110,13 @@ export const ProfilePage = () => {
     }
 
     useEffect(async () => {
-        const fetchedData = await getGamesInOrders();
-        setCurrentOrdersObjects(fetchedData);
-    }, []);
+        if(userObject){
+            const fetchedData = await getGamesInOrders();
+            setCurrentOrdersObjects(fetchedData);
+        }
+    }, [userObject]);
+
+    
     const displayOrder = (orderObject) => {
         console.log(orderObject);
         const gameDetails = [];
@@ -143,7 +147,7 @@ export const ProfilePage = () => {
     }
     return (
         <div>
-            <h1>Hello {userObject ? (userObject.rows[0].display_name || userObject.rows[0].username) : window.open("http://localhost:3000", "_self")}</h1>
+            <h1>Hello {userObject ? (userObject.rows[0].display_name || userObject.rows[0].username) : <br/>}</h1>
             {currentOrdersObjects ? <h2>Your Orders:</h2> : <h2>You have not ordered anything yet</h2>}
             {currentOrdersObjects ? currentOrdersObjects.map(orderObject => {
                return displayOrder(orderObject);

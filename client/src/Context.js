@@ -18,6 +18,8 @@ export default function Context(props){
         if(localStorage.getItem("cartState")){
           localStorage.removeItem("cartState");
         }
+        if (window.location.href === "http://localhost:3000/cart" || window.location.href === "http://localhost:3000/profile") {
+          window.location = "http://localhost:3000"}
       }
     })
     }

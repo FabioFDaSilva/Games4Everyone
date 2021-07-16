@@ -28,9 +28,6 @@ export const StorePage = () => {
         dispatch(addToCart(item));
         localStorage.setItem('cartState', cartState);
     }
-
-    useEffect(() => {       
-    })
     return (
         <section className="storeContainer">
             <Search />

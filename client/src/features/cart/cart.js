@@ -30,8 +30,6 @@ export const Cart = () => {
                     },
                     body: JSON.stringify(order_item),
                 })
-
-                console.log(order_item);
             };
 
         };
@@ -98,12 +96,13 @@ export const Cart = () => {
                     if (localStorage.getItem("cartState")) {
                         localStorage.removeItem("cartState");
                         dispatch(updateCart([]));
+                        const { cartState } = { cartState: [] };
+                        localStorage.setItem('cartState', cartState);
                     }
                 }
             }
         }
     }
-    const { cartState } = { cartState: currentDisplayedCart };
     function dispatchAndRemoveFromLocalStorage(item) {
         dispatch(removeFromCart(item));
     }
@@ -111,48 +110,43 @@ export const Cart = () => {
         dispatch(removeOneFromItem(item));
     }
 
-    useEffect(() =>{
-        if(userObject){
-            const { cartState } = { cartState: currentDisplayedCart };
-            localStorage.setItem('cartState', cartState);
-        }
-        
-    });
+    useEffect(() => {
+        const { cartState } = { cartState: currentDisplayedCart };
+        localStorage.setItem('cartState', cartState);
+    }, [currentDisplayedCart]);
 
-    const calculateTotalPrice = () =>{
-        const games = localStorage.getItem('cartState', cartState);
-
+    const calculateTotalPrice = () => {
         let totalPrice = 0;
-        
+
         Object.values(currentCart).map((item) => {
-                totalPrice += (item.price * item.quantity);
+            totalPrice += (item.price * item.quantity);
         });
         return totalPrice;
     }
     const displayCart = () => {
         return (
-        <div className="cartListContainer">
-            {currentCart ? <h2 className="alignCenter">This Order:</h2> : <h2>No items in cart.</h2>}
-            {Object.values(currentCart).map((item) => (
-                <li className="itemContainer" key={item.id}>
-                    <div className = "item">
-                        <p className = "alignCenter">Name: {item.name} </p>
-                        <p className = "alignCenter">Price: {item.price}$ Per Item</p>
-                        <p className = "alignCenter">Quantity: {item.quantity}</p>
-                        <button className = "alignCenter" onClick={() => {
-                            dispatchAndRemoveFromLocalStorage(item);
-                        }}>Remove</button>
+            <div className="cartListContainer">
+                {currentCart ? <h2 className="alignCenter">This Order:</h2> : <h2>No items in cart.</h2>}
+                {Object.values(currentCart).map((item) => (
+                    <li className="itemContainer" key={item.id}>
+                        <div className="item">
+                            <p className="alignCenter">Name: {item.name} </p>
+                            <p className="alignCenter">Price: {item.price}$ Per Item</p>
+                            <p className="alignCenter">Quantity: {item.quantity}</p>
+                            <button className="alignCenter" onClick={() => {
+                                dispatchAndRemoveFromLocalStorage(item);
+                            }}>Remove</button>
 
-                        {item.quantity > 1 ? <button className = "alignCenter" onClick={() => {
-                            dispatchAndRemoveOneFromLocalStorage(item);
-                        }}>Remove 1</button> : <br />}
-                    </div>
+                            {item.quantity > 1 ? <button className="alignCenter" onClick={() => {
+                                dispatchAndRemoveOneFromLocalStorage(item);
+                            }}>Remove 1</button> : <br />}
+                        </div>
 
-                </li>
-            ))}
-            {currentCart ? (<p className = "alignCenter">Total Quantity = {calculateTotalPrice()}$</p>) : <br/>}
-            <button className="submitOrderButton" onClick={submitOrder}>Order</button>
-        </div>
+                    </li>
+                ))}
+                {currentCart ? (<p className="alignCenter">Total Quantity = {calculateTotalPrice()}$</p>) : <br />}
+                <button className="submitOrderButton" onClick={submitOrder}>Order</button>
+            </div>
         )
 
     }

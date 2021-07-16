@@ -37,23 +37,19 @@ function App() {
   const currentUser = useSelector(selectCurrentUser);
   const currentDisplayedGames = JSON.stringify(useSelector(selectCurrentGames));
 
-  useEffect(async () => {
+  useEffect( () => {
     if (localStorage.getItem("storeState")) {
-      const parsedStoreStateGames = await  JSON.parse(localStorage.storeState);
+      const parsedStoreStateGames =  JSON.parse(localStorage.storeState);
       dispatch(updateGameList(parsedStoreStateGames));
     }
 
     if (userObject) {
       if (localStorage.getItem("cartState")) {
-        const parsedStoreStateCart =await  JSON.parse(localStorage.cartState);
+        const parsedStoreStateCart = JSON.parse(localStorage.cartState);
         dispatch(updateCart(parsedStoreStateCart));
-      } else {
-        dispatch(updateCart([]));
-      }
-    } else {
-      dispatch(updateCart([]));
+      } 
+    
     }
-
   }, [userObject]);
 
   const isLoggedIn = (userObject) => {
@@ -107,12 +103,6 @@ useEffect( () =>{
   
   const { storeState } = { storeState: currentDisplayedGames };
   localStorage.setItem('storeState', storeState);
-
-  if(!userObject){
-    if (window.location.href === "http://localhost:3000/cart") {
-    window.location = "http://localhost:3000"
-  }
-  }
   
 },[userObject])
 
