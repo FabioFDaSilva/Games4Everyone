@@ -112,8 +112,11 @@ export const Cart = () => {
     }
 
     useEffect(() =>{
-        const { cartState } = { cartState: currentDisplayedCart };
-        localStorage.setItem('cartState', cartState);
+        if(userObject){
+            const { cartState } = { cartState: currentDisplayedCart };
+            localStorage.setItem('cartState', cartState);
+        }
+        
     });
 
     const calculateTotalPrice = () =>{
@@ -128,7 +131,7 @@ export const Cart = () => {
     }
     const displayCart = () => {
         return (
-        <div className="listContainer">
+        <div className="cartListContainer">
             {currentCart ? <h2 className="alignCenter">This Order:</h2> : <h2>No items in cart.</h2>}
             {Object.values(currentCart).map((item) => (
                 <li className="itemContainer" key={item.id}>

@@ -18,7 +18,6 @@ export const StorePage = () => {
     const currentDisplayedCart = JSON.stringify(useSelector(selectCurrentCart));
 
     window.onbeforeunload = () => {
-
         const { storeState } = { storeState: currentDisplayedGames };
         localStorage.setItem('storeState', storeState);
     };
@@ -27,10 +26,10 @@ export const StorePage = () => {
 
     function dispatchAndAddToLocalStorage(item) {
         dispatch(addToCart(item));
+        localStorage.setItem('cartState', cartState);
     }
 
-    useEffect(() => {
-        localStorage.setItem('cartState', cartState);
+    useEffect(() => {       
     })
     return (
         <section className="storeContainer">
@@ -56,6 +55,7 @@ export const StorePage = () => {
                                 <p>Secundary Game Type:  {item.secundary_game_type}</p>
                                 <p>Terciary Game Type:  {item.terciary_game_type}</p>
                                 <p>Average Duration:  {item.duration} minutes</p>
+                                <p>Difficulty: {item.difficulty}</p>
                             </section>
 
                             

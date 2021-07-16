@@ -27,9 +27,11 @@ router.post("/", async (req, res, next) => {
         let bySecundaryType = [];
         let byTerciaryType = [];
         let byDurationRange = [];
+        let byMinDuration =[];
         let byMaxDuration = [];
         let byDifficultyRange = [];
         let byMaxDifficulty = [];
+        let byMinDifficulty = [];
 
 
         if (query.name && query.name !== "") {
@@ -53,6 +55,9 @@ router.post("/", async (req, res, next) => {
         if ((query.min_duration && query.max_duration) && (query.min_duration !== "" && query.max_duration !== "")) {
             byDurationRange = await pool.query("SELECT * FROM games WHERE duration < $1 AND duration > $2", [query.max_duration, query.min_duration]);
         }
+        if (query.min_duration && query.min_duration !== "") {
+            byMinDuration = await pool.query("SELECT * FROM games WHERE duration > $1", [query.min_duration]);
+        }
         if (query.max_duration && query.max_duration !== "") {
             byMaxDuration = await pool.query("SELECT * FROM games WHERE duration < $1", [query.max_duration]);
         }
@@ -61,6 +66,9 @@ router.post("/", async (req, res, next) => {
         }
         if(query.max_difficulty && query.max_difficulty !== ""){
             byMaxDifficulty = await pool.query("SELECT * FROM games WHERE difficulty <$1", [query.max_difficulty]);
+        }
+        if(query.min_difficulty && query.min_difficulty !== ""){
+            byMinDifficulty = await pool.query("SELECT * FROM games WHERE difficulty >$1", [query.min_difficulty]);
         }
 
 
@@ -72,9 +80,11 @@ router.post("/", async (req, res, next) => {
         const set4 = new Set(bySecundaryType.rows);
         const set5 = new Set(byTerciaryType.rows);
         const set6 = new Set(byDurationRange.rows);
-        const set7 = new Set(byMaxDuration.rows);
-        const set8 = new Set(byDifficultyRange.rows);
-        const set9 = new Set(byMaxDifficulty.rows);
+        const set7 = new Set(byMinDuration.rows);
+        const set8 = new Set(byMaxDuration.rows);
+        const set9 = new Set(byDifficultyRange.rows);
+        const set10 = new Set(byMaxDifficulty.rows);
+        const set11 = new Set(byMinDifficulty.rows);
         ///create sets for the IDs
         let set0ID = new Set();
         let set1ID = new Set();
@@ -86,6 +96,8 @@ router.post("/", async (req, res, next) => {
         let set7ID = new Set();
         let set8ID = new Set();
         let set9ID = new Set();
+        let set10ID = new Set();
+        let set11ID = new Set();
 
         ///assign every id in each set to its corresponding setID
         [...set0].map(item => set0ID.add(item.id));
@@ -98,9 +110,11 @@ router.post("/", async (req, res, next) => {
         [...set7].map(item => set7ID.add(item.id));
         [...set8].map(item => set8ID.add(item.id));
         [...set9].map(item => set9ID.add(item.id));
+        [...set10].map(item => set10ID.add(item.id));
+        [...set11].map(item => set11ID.add(item.id));
 
         ///Merge all idsets
-        const idSets = [set0ID, set1ID, set2ID, set3ID, set4ID, set5ID, set6ID, set7ID, set8ID, set9ID];
+        const idSets = [set0ID, set1ID, set2ID, set3ID, set4ID, set5ID, set6ID, set7ID, set8ID, set9ID, set10ID, set11ID];
 
         ///Filter out anything that is empty
         const nonEmptySets = idSets.filter(s => s.size > 0);
@@ -124,7 +138,7 @@ router.post("/", async (req, res, next) => {
 
 
         ///Create a set of game objects
-        const objectSets = [set0, set1, set2, set3, set4, set5, set6, set7, set8, set9];
+        const objectSets = [set0, set1, set2, set3, set4, set5, set6, set7, set8, set9, set10, set11];
         ///Filter out empty ones
         const nonEmptyObjectSets = objectSets.filter(s => s.size > 0);
         ///Organize them based on size

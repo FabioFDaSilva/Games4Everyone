@@ -1,5 +1,5 @@
 
-.listContainer{
+.cartListContainer{
   display: flex;
   flex-direction: column;
   align-content: center;
@@ -12,7 +12,7 @@
   align-content: center;
   align-self: center;
 }
-.listContainer .item {
+.cartListContainer .item {
   display: flex;
   flex-direction: column;
   align-content: center;

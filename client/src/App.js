@@ -35,16 +35,17 @@ function App() {
 
   const userObject = useContext(myContext);
   const currentUser = useSelector(selectCurrentUser);
+  const currentDisplayedGames = JSON.stringify(useSelector(selectCurrentGames));
 
-  useEffect(() => {
+  useEffect(async () => {
     if (localStorage.getItem("storeState")) {
-      const parsedStoreStateGames = JSON.parse(localStorage.storeState);
+      const parsedStoreStateGames = await  JSON.parse(localStorage.storeState);
       dispatch(updateGameList(parsedStoreStateGames));
     }
 
     if (userObject) {
       if (localStorage.getItem("cartState")) {
-        const parsedStoreStateCart = JSON.parse(localStorage.cartState);
+        const parsedStoreStateCart =await  JSON.parse(localStorage.cartState);
         dispatch(updateCart(parsedStoreStateCart));
       } else {
         dispatch(updateCart([]));
@@ -55,11 +56,9 @@ function App() {
 
   }, [userObject]);
 
-  const isLoggedIn = (currentUser, userObject) => {
+  const isLoggedIn = (userObject) => {
+    
     if (!userObject) {
-      if (window.location.href === "http://localhost:3000/cart") {
-        window.location = "http://localhost:3000"
-      }
       return (<NavLink exact to='/loginPage'><button>Login</button></NavLink>);
     }
     else {
@@ -101,12 +100,21 @@ function App() {
     } catch (err) {
       console.error(err.message);
     }
+  
+  
+};
+useEffect( () =>{
+  
+  const { storeState } = { storeState: currentDisplayedGames };
+  localStorage.setItem('storeState', storeState);
+
+  if(!userObject){
+    if (window.location.href === "http://localhost:3000/cart") {
+    window.location = "http://localhost:3000"
   }
-  const currentDisplayedGames = JSON.stringify(useSelector(selectCurrentGames));
-  useEffect( () =>{
-    const { storeState } = { storeState: currentDisplayedGames };
-    localStorage.setItem('storeState', storeState);
-});
+  }
+  
+},[userObject])
 
   return (
 
@@ -125,8 +133,7 @@ function App() {
             </form>
           </div>
           <div className="rightAlign">
-
-            {isLoggedIn(currentUser, userObject)}
+            {isLoggedIn(userObject)}
           </div>
 
         </nav>
