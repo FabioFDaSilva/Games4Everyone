@@ -29,29 +29,36 @@ export const StorePage = () => {
         dispatch(addToCart(item));
     }
 
-    useEffect (() =>{
+    useEffect(() => {
         localStorage.setItem('cartState', cartState);
     })
     return (
         <section className="storeContainer">
+            <Search />
             <ul className="listContainer">
-                <Search />
                 {currentGames.length > 0 ? Object.values(currentGames).map((item) => (
-                    <li className="item" key={item.id}>
-                        <div>
-                            <p>itemId</p>{item.id}<br />
-                            {item.name}<br />
-                            {item.price}<br />
-                            {item.description}<br />
-                            {item.main_game_type}<br />
-                            {item.secundary_game_type}<br />
-                            {item.terciary_game_type}<br />
-                            {item.duration}<br />
-                            <button onClick={() => {
+                    <li key={item.id}>
+                        <div className="item">
+                            <section className="vitalInfo">
+                                <h2 className="allignCenter">{item.name}</h2>
+                                <p>Price:  {item.price}$</p>
+                                <p>{item.description}</p>
+                                <button className="addToCartButton" onClick={() => {
                                 userObject ?
                                     dispatchAndAddToLocalStorage(item) : window.location = "http://localhost:3000/loginPage";
                             }}>Add To Cart</button><br />
-                            <Link to={`/items/${item.id}`}><button>View Item</button></Link>
+                            </section>
+
+
+                            <section className="complementaryInfo">
+                                <p>Overall Rank: {item.popularity}</p>
+                                <p>Main Game type:  {item.main_game_type}</p>
+                                <p>Secundary Game Type:  {item.secundary_game_type}</p>
+                                <p>Terciary Game Type:  {item.terciary_game_type}</p>
+                                <p>Average Duration:  {item.duration} minutes</p>
+                            </section>
+
+                            
                         </div>
                     </li>
                 )) :

@@ -1,0 +1,10 @@
+
+#searchForm {
+  display: flex;
+  background-color: rgb(187, 185, 185);
+  flex-direction: column;
+}
+
+#searchForm .searchField{
+  align-self: flex-start;
+}

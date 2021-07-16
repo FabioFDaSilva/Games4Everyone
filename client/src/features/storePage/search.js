@@ -1,6 +1,7 @@
-import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom'; 
-import {useSelector, useDispatch} from "react-redux";
-import {selectCurrentGames, updateGameList} from "./storepageSlice";
+
+import {useDispatch} from "react-redux";
+import {updateGameList} from "./storepageSlice";
+import './search.css';
 
 
 export const Search = () =>{
@@ -37,22 +38,20 @@ export const Search = () =>{
         } catch (err) {
             console.error(err.message);
         }
-
-        
     }
     return(
-        <div>
-            <form id="searchfrm" onSubmit={onSubmitForm}>
-                Name: <input type="search" placeholder="Search For A Game Name" id="nameSearch"></input>
-                Max Price: <input type="search" placeholder="In Dollars"  id="maxPriceSearch"></input>
-                Min Price: <input type="search" placeholder="In Dollars"  id="minPriceSearch"></input>
-                Main Game Type: <input type="search" placeholder="Strategy, Card Game " id="mGTypeSearch"></input>
-                Secundary Game Type: <input type="search" placeholder="Fighting, City Building" id="sGTypeSearch"></input>
-                Terciary Game Type: <input type="search" placeholder="Manufacturing, Deduction" id="tGTypeSearch"></input>
-                Min Duration: <input type="search" placeholder="In Minutes" id="minDurationSearch"></input>
-                Max Duration: <input type="search" placeholder="In Minutes" id="maxDurationSearch"></input>
-                Max Difficulty: <input type="search" placeholder="1 to 5, 5 being hard" id="maxDifficultySearch"></input>
-                Min Difficulty: <input type="search" placeholder="1 to 5, 1 being easy" id="minDifficulty"></input>
+        <div id="searchFormDiv">
+            <form id="searchForm" onSubmit={onSubmitForm}>
+                Name: <input type="search" placeholder="Search For A Game Name" id="nameSearch" className ="searchField"></input>
+                Max Price: <input type="search" placeholder="In Dollars"  id="maxPriceSearch" className ="searchField"></input>
+                Min Price: <input type="search" placeholder="In Dollars"  id="minPriceSearch" className ="searchField"></input>
+                Main Game Type: <input type="search" placeholder="Strategy, Card Game " id="mGTypeSearch" className ="searchField"></input>
+                Secundary Game Type: <input type="search" placeholder="Fighting, City Building" id="sGTypeSearch" className ="searchField"></input>
+                Terciary Game Type: <input type="search" placeholder="Manufacturing, Deduction" id="tGTypeSearch"className ="searchField"></input>
+                Min Duration: <input type="search" placeholder="In Minutes" id="minDurationSearch" className ="searchField"></input>
+                Max Duration: <input type="search" placeholder="In Minutes" id="maxDurationSearch" className ="searchField"></input>
+                Max Difficulty: <input type="search" placeholder="1 to 5, 5 being hard" id="maxDifficultySearch" className ="searchField"></input>
+                Min Difficulty: <input type="search" placeholder="1 to 5, 1 being easy" id="minDifficulty" className ="searchField"></input>
                 <button>Search</button>
             </form>
         </div>

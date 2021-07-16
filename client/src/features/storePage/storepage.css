@@ -4,12 +4,45 @@
 
 .storeContainer .listContainer{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   padding: 1em 1em;
   list-style: none;
 }
 
 .storeContainer .listContainer .item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   background-color: darkgrey;
   margin: 2em 2em;
+  border: 1px solid black;
+  box-shadow: -1px 1px yellow;
+}
+.storeContainer .listContainer .item .addToCartButton{
+  align-self: center;
+  width: 15%;
+  height: 10%;
+}
+
+.allignCenter{
+  align-self: center;
+}
+
+.complementaryInfo{
+  padding: 5px;
+  align-self: flex-start;
+  width: 20%;
+  background-color: rgb(182, 181, 181);
+  border: 1px solid black;
+  box-shadow: -1px 1px yellow;
+}
+.vitalInfo{
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  width: 80%;
+}
+.searchFields {
+  background-color: lightblue;
 }
