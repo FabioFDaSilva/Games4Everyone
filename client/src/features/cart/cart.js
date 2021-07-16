@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { myContext } from '../../Context';
 import { removeFromCart, selectCurrentCart, removeOneFromItem, updateCart } from "./cartSlice";
 import { useContext, useEffect } from 'react';
+import './cart.css';
 
 
 export const Cart = () => {
@@ -115,33 +116,39 @@ export const Cart = () => {
         localStorage.setItem('cartState', cartState);
     });
 
+    const calculateTotalPrice = () =>{
+        const games = localStorage.getItem('cartState', cartState);
 
+        let totalPrice = 0;
+        
+        Object.values(currentCart).map((item) => {
+                totalPrice += (item.price * item.quantity);
+        });
+        return totalPrice;
+    }
     const displayCart = () => {
-        return (<div>
+        return (
+        <div className="listContainer">
+            {currentCart ? <h2 className="alignCenter">This Order:</h2> : <h2>No items in cart.</h2>}
             {Object.values(currentCart).map((item) => (
-                <li className="item" key={item.id}>
-                    <div>
-                        {item.id}<br />
-                        {item.name}<br />
-                        {item.price}<br />
-                        {item.description}<br />
-                        {item.mainGameType}<br />
-                        {item.secundaryGameType}<br />
-                        {item.terciaryGameType}<br />
-                        {item.duration}<br />
-                        {item.quantity}
-                        <button onClick={() => {
+                <li className="itemContainer" key={item.id}>
+                    <div className = "item">
+                        <p className = "alignCenter">Name: {item.name} </p>
+                        <p className = "alignCenter">Price: {item.price}$ Per Item</p>
+                        <p className = "alignCenter">Quantity: {item.quantity}</p>
+                        <button className = "alignCenter" onClick={() => {
                             dispatchAndRemoveFromLocalStorage(item);
-                        }}>Remove</button>
+                        }}>Remove All</button>
 
-                        {item.quantity > 1 ? <button onClick={() => {
+                        {item.quantity > 1 ? <button className = "alignCenter" onClick={() => {
                             dispatchAndRemoveOneFromLocalStorage(item);
-                        }}>-1</button> : <br />}
+                        }}>Remove 1</button> : <br />}
                     </div>
 
                 </li>
             ))}
-            <button onClick={submitOrder}>Order</button>
+            {currentCart ? (<p className = "alignCenter">Total Quantity = {calculateTotalPrice()}$</p>) : <br/>}
+            <button className="submitOrderButton" onClick={submitOrder}>Order</button>
         </div>
         )
 

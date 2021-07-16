@@ -1,14 +1,32 @@
-.cartContainer { 
-  display: flex;
-}
 
-.cartContainer .listContainer{
+.listContainer{
   display: flex;
   flex-direction: column;
+  align-content: center;
+  padding: 1em 1em;
   list-style: none;
 }
-
+.itemContainer{
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-self: center;
+}
 .listContainer .item {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
   background-color: darkgrey;
-  margin: 1em 1em;
+  border: 1px solid black;
+  box-shadow: -1px 1px yellow;
+  width: 600px;
+}
+
+.submitOrderButton{
+  align-self: center;
+  width: 25%;
+  height: 50px;
+}
+.alignCenter{
+  align-self: center;
 }
