@@ -138,7 +138,7 @@ export const Cart = () => {
                         <p className = "alignCenter">Quantity: {item.quantity}</p>
                         <button className = "alignCenter" onClick={() => {
                             dispatchAndRemoveFromLocalStorage(item);
-                        }}>Remove All</button>
+                        }}>Remove</button>
 
                         {item.quantity > 1 ? <button className = "alignCenter" onClick={() => {
                             dispatchAndRemoveOneFromLocalStorage(item);
