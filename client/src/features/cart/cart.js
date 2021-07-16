@@ -110,7 +110,6 @@ export const Cart = () => {
         dispatch(removeOneFromItem(item));
     }
     window.onbeforeunload = () =>{
-       
         if(localStorage.getItem('cartState')){
             const { cartState } = { cartState: currentDisplayedCart };
             dispatch(updateCart(cartState));
