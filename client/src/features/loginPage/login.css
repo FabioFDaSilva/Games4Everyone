@@ -23,7 +23,8 @@
   align-self: center;
 }
 #loginButton{
-
+  align-self: center;
+  width: 25%;
 }
 
 #googleLogin {
