@@ -7,6 +7,7 @@ import { useContext, useEffect } from 'react';
 import { myContext } from '../../Context';
 import { addToCart, selectCurrentCart } from "../cart/cartSlice";
 import "./storepage.css";
+import { selectCurrentUser } from '../currentUser/currentUserSlice';
 
 
 
@@ -17,17 +18,24 @@ export const StorePage = () => {
     const userObject = useContext(myContext);
     const currentDisplayedCart = JSON.stringify(useSelector(selectCurrentCart));
 
-    window.onbeforeunload = () => {
-        const { storeState } = { storeState: currentDisplayedGames };
-        localStorage.setItem('storeState', storeState);
-    };
-
     const { cartState } = { cartState: currentDisplayedCart };
+    const {storeState} = { storeState: currentDisplayedGames};
 
     function dispatchAndAddToLocalStorage(item) {
         dispatch(addToCart(item));
         localStorage.setItem('cartState', cartState);
     }
+
+    window.onbeforeunload = () =>{
+        localStorage.setItem('storeState', storeState);
+    }
+
+    useEffect( () =>{
+        const updatedGameList = localStorage.getItem('storeState');
+        if(userObject){
+            dispatch(updateGameList(updatedGameList))
+        }
+    },[userObject]);
     return (
         <section className="storeContainer">
             <Search />
