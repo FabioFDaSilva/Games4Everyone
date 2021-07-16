@@ -3,6 +3,7 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {selectCurrentUser} from "../currentUser/currentUserSlice";
 import { current } from 'immer';
+import './signup.css';
 
 
 
@@ -46,7 +47,8 @@ export const Signup = () =>{
         }
     }
     return(
-        <form onSubmit={trySignup}>
+        <div id="signupFormContainer">
+            <form onSubmit={trySignup} id="signupForm">
             <p>Username:</p>
             <input type="text" name="username" value={name} onChange={handleUsernameChange}></input>
             <p>Password:</p>
@@ -54,7 +56,9 @@ export const Signup = () =>{
             <p>Your email address:</p>
             <input type="email" name="address" value={address} onChange={handleAddressChange}></input>
             <br />
-            <input type="submit"></input>
+            <input type="submit" id ="signupButton"></input>
         </form>
+        </div>
+        
     )
 }
