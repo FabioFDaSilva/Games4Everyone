@@ -59,8 +59,8 @@ function App() {
       return (<NavLink exact to='/loginPage'>Login</NavLink>);
     }
     else {
-      if (window.location.href === "http://localhost:3000/loginPage") {
-        window.location = "http://localhost:3000";
+      if (window.location.href === "http://https://games4everyone.herokuapp.com/loginPage") {
+        window.location = "http://https://games4everyone.herokuapp.com";
       }
       return (
         <div>
@@ -90,7 +90,7 @@ function App() {
       console.log(result);
       if (result !== "No Items Found") {
         dispatch(updateGameList(result));
-        window.location = "http://localhost:3000/store";
+        window.location = "http://https://games4everyone.herokuapp.com/store";
       }else{
         alert("No games found with that name");
       }
