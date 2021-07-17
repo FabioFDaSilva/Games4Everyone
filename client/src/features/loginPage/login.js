@@ -27,7 +27,7 @@ export const LoginPage = () =>{
             "password": password
         }
         
-        const response = await fetch("http://localhost:5000/auth/login",{
+        const response = await fetch("/auth/login",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -49,7 +49,7 @@ export const LoginPage = () =>{
 
     const googleLogin = async(e) =>{
         e.preventDefault();
-        window.open("http://localhost:5000/auth/google", "_self");
+        window.open("/auth/google", "_self");
     }
     return(
         <div id = "loginFormContainer">

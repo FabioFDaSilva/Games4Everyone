@@ -23,7 +23,8 @@ router.post("/", async (req, res, next) => {
 
 
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
+        res.status(500).json({status:"error"});
 
     }
 });
@@ -38,7 +39,8 @@ router.get("/:user_id", async (req, res, next) => {
         res.json(myOrder);
 
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
+        res.status(500).json({status:"error"});
     }
 })
 
@@ -51,7 +53,8 @@ router.delete("/:id", async (req, res, next) => {
         res.json("Order deleted");
 
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
+        res.status(500).json({status:"error"});
     }
 })
 

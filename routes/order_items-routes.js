@@ -9,7 +9,8 @@ router.post("/", async (req, res, next) => {
         const newOrderItem = await pool.query("INSERT INTO order_items (game_id, price, orders_id) VALUES ($1, $2, $3)", [game_id_string, req.body.price, req.body.order_id]);
         res.json(newOrderItem);
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
+        res.status(500).json({status:"error"});
 
     }
 });
@@ -26,14 +27,16 @@ router.put("/", async (req, res, next) => {
             try {
                 const updateOrders = await pool.query("UPDATE orders SET price = $1 WHERE order_items_id = $2", [game_value.rows[0].price * req.body.quantity, req.body.id]);
             } catch (err) {
-                console.error(err.message);
+                console.error(err);
+                res.status(500).json({status:"error"});
             }
 
 
         }
         res.json(updatedItem);
     } catch (error) {
-        console.error(error.message);
+        console.error(error);
+        res.status(500).json({status:"error"});
     }
 });
 
@@ -43,7 +46,8 @@ router.get("/:id", async(req,res,next) =>{
         const fetchedOrderItem = await pool.query("SELECT * FROM order_items WHERE orders_id = $1", [id]);
         res.json(fetchedOrderItem);
     } catch (err) {
-        console.error(err.message)
+        console.error(err);
+        res.status(500).json({status:"error"});
     }
 })
 

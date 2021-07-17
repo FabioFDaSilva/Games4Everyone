@@ -17,7 +17,8 @@ router.post("/", async (req, res, next) => {
         }
 
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
+        res.status(500).json({status:"error"});
     }
 })
 
@@ -28,7 +29,8 @@ router.post("/:id"), async (req, res, next) => {
         const getUser = await pool.query("SELECT * FROM users WHERE id = $1 RETURNING ", [req.body.id]);
         res.json(getUser);
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
+        res.status(500).json({status:"error"});
     }
 }
 router.put("/:id", async (req, res, next) => {
@@ -48,7 +50,8 @@ router.put("/:id", async (req, res, next) => {
                     thisUser.address = currentUser.rows[0].address;
                 }
             } catch (err) {
-                console.error(err.message);
+                console.error(err);
+                res.status(500).json({status:"error"});
             }
 
         }
@@ -59,7 +62,8 @@ router.put("/:id", async (req, res, next) => {
 
 
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
+        res.status(500).json({status:"error"});
     }
 })
 

@@ -12,9 +12,10 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const keys = require('./config/keys');
 const bcrypt = require('bcrypt');
+const path = require("path");
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 require('./config/passport-setup');
 
@@ -23,21 +24,42 @@ app.set("view engine", "ejs");
 
 //////////////////////// START of middleware
 
-
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+if (process.env.NODE_ENV === "production"){
+    
+    app.use(express.static(path.join(__dirname, "client/build")));
+}
+app.use(cors());
 app.use(express.json());
 app.use(session({
     secret: "secretcode",
     resave: true,
     saveUninitialized: true
 }));
+
+app.use('/auth/google', (req, res, next) => {
+    console.log('req', req);
+    next();
+  });
+
+app.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile']
+}));
+
+
+
 app.use(passport.initialize());
 app.use(passport.session());
+
+
+
+
 app.use('/auth', authRoutes);
 app.use('/games', gamesRoutes);
 app.use('/users', userRoutes);
 app.use('/order_items', order_itemsRoutes);
 app.use('/orders', ordersRoutes);
+
+
 
 
 passport.serializeUser(function (user, done) {
@@ -71,7 +93,8 @@ passport.deserializeUser(async function (id, done) {
             }
         }
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
+        res.status(500).json({status:"error"});
     }
 
 
@@ -125,13 +148,14 @@ passport.use(new GoogleStrategy({
             // User already exists, return profile
             return cb(null, profile);
         } catch (err) {
-            console.log("error:");
-            console.error(err.message);
+            console.error(err);
+            res.status(500).json({status:"error"});
         }
     }));
 
 app.get("/getUser", (req, res, next) => {
     console.log("trying to get user");
+    console.log(req.user);
     res.send(req.user);
 });
 
@@ -140,7 +164,8 @@ app.get("/googleUsers/:googleId", async (req, res, next) => {
         const foundUser = await pool.query("SELECT * FROM users WHERE googleId = $1"[req.params]);
         res.json(foundUser);
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
+        res.status(500).json({status:"error"});
     }
 });
 

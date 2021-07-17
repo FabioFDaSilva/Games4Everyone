@@ -23,7 +23,7 @@ function App() {
 
   const tryLogout = async (e) => {
     e.preventDefault();
-    axios.get("http://localhost:5000/auth/logout", {
+    axios.get("/auth/logout", {
       withCredentials: true
     }).then(res => {
       if (res.data === "Done") {
@@ -77,7 +77,7 @@ function App() {
       }
 
       console.log(JSON.stringify(body));
-      const response = await fetch("http://localhost:5000/games", {
+      const response = await fetch("/games", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)

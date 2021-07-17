@@ -9,7 +9,8 @@ router.get("/:id", async (req, res, next) => {
         res.json(newItem);
         
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
+        res.status(500).json({status:"error"});
     }
 });
 
@@ -121,9 +122,6 @@ router.post("/", async (req, res, next) => {
 
         ///If the remaining sets contain any matching IDs, return those
         let commonElements;
-
-        console.log(nonEmptySets.length);
-        console.log(nonEmptySets);
         if (nonEmptySets.length > 0) {
             commonElements = nonEmptySets.reduce((setA, setB) => {
                 const intersection = new Set();
@@ -165,11 +163,11 @@ router.post("/", async (req, res, next) => {
 
 
         ///Turn the set of common game objects into an array and send it as a response.
-        console.log(response);
         res.json(response);
 
     } catch (err) {
-        console.error(err.message);
+        console.error(err);
+        res.status(500).json({status:"error"});
     }
 });
 

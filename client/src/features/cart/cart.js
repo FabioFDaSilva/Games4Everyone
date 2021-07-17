@@ -23,7 +23,7 @@ export const Cart = () => {
                 "price": parsedStoreCartGames[i].price
             };
             for (let j = 0; j < parsedStoreCartGames[i]["quantity"]; j++) {
-                const response = await fetch("http://localhost:5000/order_items", {
+                const response = await fetch("/order_items", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -58,7 +58,7 @@ export const Cart = () => {
             }
         }
 
-        const response = await fetch("http://localhost:5000/orders", {
+        const response = await fetch("/orders", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

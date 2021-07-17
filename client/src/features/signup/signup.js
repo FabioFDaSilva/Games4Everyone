@@ -32,7 +32,7 @@ export const Signup = () =>{
             "password": password,
             "address": address
         }
-        const newUser = await fetch("http://localhost:5000/users", {
+        const newUser = await fetch("/users", {
             method: "POST",
             body: JSON.stringify(user),
             headers:{

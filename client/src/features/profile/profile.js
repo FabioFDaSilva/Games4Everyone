@@ -19,11 +19,11 @@ export const ProfilePage = () => {
     const getUserOrders = async () => {
 
         if (userObject.rows[0].google_user_id) {
-            const response = await fetch(`http://localhost:5000/orders/${userObject.rows[0].google_user_id}`);
+            const response = await fetch(`/orders/${userObject.rows[0].google_user_id}`);
             const toJson = await response.json();
             ordersArray.push(toJson.rows);
         } else {
-            const response = await fetch(`http://localhost:5000/orders/${userObject.rows[0].id}`);
+            const response = await fetch(`/orders/${userObject.rows[0].id}`);
             const toJson = await response.json();
             ordersArray.push(toJson.rows);
 
@@ -35,7 +35,7 @@ export const ProfilePage = () => {
     const getOrderItemsInOrders = async () => {
         const allOrders = await getUserOrders();
         const allItemOrdersInOrders = await Object.values(allOrders[0]).map(async (order) => {
-            const response = await fetch(`http://localhost:5000/order_items/${order.id}`);
+            const response = await fetch(`/order_items/${order.id}`);
             const toJson = await response.json();
             return toJson.rows;
         });
@@ -49,7 +49,7 @@ export const ProfilePage = () => {
         const allCorrespondingGames = Object.values(allOrderItems).map(async (orderItem) => {
             const matchOrderItemWithGame = Object.values(orderItem).map(async (indGame) => {
                 if (indGame) {
-                    const response = await fetch(`http://localhost:5000/games/${indGame.game_id}`);
+                    const response = await fetch(`/games/${indGame.game_id}`);
                     const toJson = await response.json();
                     return toJson.rows[0];
                 }

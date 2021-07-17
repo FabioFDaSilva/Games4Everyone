@@ -11,7 +11,7 @@ export default function Context(props){
   const [userObject, setUserObject] = useState();
   useEffect(() =>{
     async function fetchData(){
-      await axios.get("http://localhost:5000/getuser", {withCredentials: true}).then((res) =>{
+      await axios.get("/getUser", {withCredentials: true}).then((res) =>{
       if(res.data){
         setUserObject(res.data);
       }else{
