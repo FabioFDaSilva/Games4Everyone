@@ -32,21 +32,48 @@ header img{
 
 header nav{
   display: flex;
-  background-color: darkgrey;
-  border: 1px solid black;
   justify-content: space-between;
-  box-shadow: -1px 1px yellow;
+  align-items: stretch;
+  .leftAlign, .rightAlign{
+    display: flex;
+    align-items: stretch;
+    >a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      &:not(:first-child) { margin-left: 5px; };
+      border: 1px solid #888;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #e0e0e0;
+      background-color: #888;
+    }
+  }
 }
 
-header nav button{
-  width: 7em;
-  height: 3.5em;
-  background-color: lightgrey;
+
+#searchfrm{
+  display: flex;
+  height: 35px;
+  align-items: stretch;
+  margin:5px;
+  >input{
+    $radius: 10px;
+    border-radius: $radius 0 0 $radius;
+    border: 1px solid #aaa;
+    padding: 0 20px;
+  }
+  >button{
+    $radius: 10px;
+    border-radius: 0 $radius $radius 0 ;
+    border: 1px solid #aaa;
+    padding: 0 20px;
+    border-left: 0;
+  }
 }
 
 header nav #searchBar{
-  margin-top: 0.9em;
-  margin-bottom: 0.9em;
   width: 30em;
 }
 

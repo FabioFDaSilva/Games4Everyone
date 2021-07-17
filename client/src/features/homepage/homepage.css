@@ -1,33 +1,36 @@
 main {
   display: flex;
-  border: 1px solid black;
-  background-color: darkgrey;
   flex-direction: column;
-  margin: 1em 1em;
-  padding: 3em 3em;
-  box-shadow: -1px 1px yellow;
 }
 
 main h2{
   align-self: center;
 }
 
+.topContainer{
+  max-width: 1200px;
+  margin:auto;
+}
 main .explorePromo{
   display: flex;
-  justify-content: space-around;
-  
+  justify-content: space-between;  
 }
 
 main .explorePromoBox{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1px solid black ;
-  background-color: rgb(115, 115, 115);
+  flex: 1 1 0;
+  padding: 15px;
+  border-top: 1px solid black;
+}
+
+main .explorePromoBox:not(:first-child) {
+  margin-left: 15px;
 }
 
 main .explorePromoBox p{
-  text-align:center;
+  text-align: center;
 }
 
 main .explorePromoBox button{

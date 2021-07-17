@@ -6,7 +6,7 @@ import { Signup } from './features/signup/signup';
 import { Cart } from './features/cart/cart';
 import { ProfilePage } from './features/profile/profile';
 import { BrowserRouter, Route, Switch, NavLink } from 'react-router-dom';
-import './App.css';
+import './App.scss';
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentUser, login, logout } from "./features/currentUser/currentUserSlice";
 import { ItemPage } from './features/itemPage/itemPage';
@@ -16,6 +16,9 @@ import axios from 'axios';
 import {selectCurrentGames, updateGameList } from "./features/storePage/storepageSlice";
 import { updateCart } from "./features/cart/cartSlice";
 
+///Resources from FAwesome
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 function App() {
 
@@ -53,7 +56,7 @@ function App() {
   const isLoggedIn = (userObject) => {
     
     if (!userObject) {
-      return (<NavLink exact to='/loginPage'><button>Login</button></NavLink>);
+      return (<NavLink exact to='/loginPage'>Login</NavLink>);
     }
     else {
       if (window.location.href === "http://localhost:3000/loginPage") {
@@ -61,9 +64,9 @@ function App() {
       }
       return (
         <div>
-          <NavLink exact to='/cart'><button>Cart</button></NavLink>
-          <NavLink exact to="/profile"><button>Profile</button></NavLink>
-          <NavLink exact to='/logout'><button onClick={tryLogout}>Logout</button></NavLink>
+          <NavLink exact to='/cart'>Cart</NavLink>
+          <NavLink exact to="/profile">Profile</NavLink>
+          <NavLink exact to='/logout' onClick={tryLogout}>Logout</NavLink>
         </div>
       )
     }
@@ -103,17 +106,18 @@ useEffect( () =>{
   return (
 
     <BrowserRouter>
+    <div className="topContainer">
       <header>
         <img src={logo} alt="logo" />
         <nav>
           <div className="leftAlign">
-            <NavLink exact to='/'><button>Home</button></NavLink>
-            <NavLink exact to='/store'><button>Store</button></NavLink>
+            <NavLink exact to='/'>Home</NavLink>
+            <NavLink exact to='/store'>Store</NavLink>
           </div>
           <div>
             <form id="searchfrm" onSubmit={onSubmitSearchForm} className="centerAlign">
               <input type="search" placeholder="Search For A Game Name" id="searchBar"></input>
-              <button>Search</button>
+              <button><FontAwesomeIcon icon={faSearch} /></button>
             </form>
           </div>
           <div className="rightAlign">
@@ -150,6 +154,7 @@ useEffect( () =>{
         </Route>
 
       </Switch>
+    </div>
     </BrowserRouter>
   )
 
