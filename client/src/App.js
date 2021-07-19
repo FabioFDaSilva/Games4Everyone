@@ -63,7 +63,7 @@ function App() {
         window.location = "/";
       }
       return (
-        <div>
+        <div className="rightAlign">
           <NavLink exact to='/cart'>Cart</NavLink>
           <NavLink exact to="/profile">Profile</NavLink>
           <NavLink exact to='/logout' onClick={tryLogout}>Logout</NavLink>
