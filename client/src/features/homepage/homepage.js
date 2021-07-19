@@ -33,7 +33,7 @@ export const Homepage = () =>{
 
           const results = await fetchGames(body);
           if(results){
-               window.location = "http://https://games4everyone.herokuapp.com/store";
+               window.location = "/store";
           }
      }
      const searchForMidDifGames = async (e) =>{
@@ -45,7 +45,7 @@ export const Homepage = () =>{
 
           const results = await fetchGames(body);
           if(results){
-               window.location = "http://https://games4everyone.herokuapp.com/store";
+               window.location = "/store";
           }
 
      }
@@ -58,7 +58,7 @@ export const Homepage = () =>{
 
           const results = await fetchGames(body);
           if(results){
-               window.location = "http://https://games4everyone.herokuapp.com/store";
+               window.location = "/store";
           }
      }
 

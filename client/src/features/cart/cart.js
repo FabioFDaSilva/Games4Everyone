@@ -91,7 +91,7 @@ export const Cart = () => {
                         sessionStorage.removeItem("userOrders");
                         sessionStorage.removeItem("userOrderItems");
                     }
-                    window.open("http://https://games4everyone.herokuapp.com/profile", "_self");
+                    window.open("/profile", "_self");
 
                     if (localStorage.getItem("cartState")) {
                         localStorage.removeItem("cartState");

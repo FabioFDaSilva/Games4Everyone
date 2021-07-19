@@ -10,18 +10,18 @@ router.get('/google', passport.authenticate('google', {
     scope: ['profile']
 }));
 
-router.get('/google/redirect', passport.authenticate('google', { failureRedirect: 'http://https://games4everyone.herokuapp.com/loginPage' }),
+router.get('/google/redirect', passport.authenticate('google', { failureRedirect: '/loginPage' }),
     function (req, res) {
-        res.redirect('http://https://games4everyone.herokuapp.com');
+        res.redirect('');
     });
 
-router.get('/login/redirect', passport.authenticate('local', { failureRedirect: 'http://https://games4everyone.herokuapp.com/loginPage' }),
+router.get('/login/redirect', passport.authenticate('local', { failureRedirect: '/loginPage' }),
     function (req, res) {
-        res.redirect('http://https://games4everyone.herokuapp.com');
+        res.redirect('/');
     });
 
 router.post('/login', passport.authenticate('local', {
-    failureRedirect: 'http://https://games4everyone.herokuapp.com/loginPage'
+    failureRedirect: '/'
 }), function (req, res, next) {
     req.login(req.user, (err) =>{
         if (err){

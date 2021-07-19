@@ -31,7 +31,7 @@ export const LoginPage = () =>{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                'Access-Control-Allow-Origin': 'http://https://games4everyone.herokuapp.com'
+                'Access-Control-Allow-Origin': '/'
             },
             body: JSON.stringify(user),
             credentials: 'include'
@@ -42,7 +42,7 @@ export const LoginPage = () =>{
             alert("User not found");
         }
         if(dispatch(login(toJson))){
-            window.open("http://https://games4everyone.herokuapp.com/", "_self");
+            window.open("/", "_self");
         }
         
     }

@@ -41,7 +41,7 @@ export const Signup = () =>{
         })
         const response = await newUser.json();
         if (response.data){
-            window.open("http://https://games4everyone.herokuapp.com/loginPage", "_self");
+            window.open("/loginPage", "_self");
             alert("User created");
         }else{
             alert("Username taken");
