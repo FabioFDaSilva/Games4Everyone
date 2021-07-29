@@ -12,7 +12,7 @@ router.get('/google', passport.authenticate('google', {
 
 router.get('/google/redirect', passport.authenticate('google', { failureRedirect: '/loginPage' }),
     function (req, res) {
-        res.redirect('');
+        res.redirect('/');
     });
 
 router.get('/login/redirect', passport.authenticate('local', { failureRedirect: '/loginPage' }),

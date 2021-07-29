@@ -68,7 +68,7 @@ export const LoginPage = () =>{
                 </Switch>
 
             <p id="registerLink"> Or log in with Google</p><button onClick={googleLogin} id="googleLogin">Google Login</button>
-            <p id="registerLink">(Might need to contact me via email first so I can add you to the list of accepted emails for google login, blame google)</p>
+            <p id="registerLink">(Might need to contact me via email first so I can add you to the list of accepted emails for google login)</p>
             <p id="registerLink">(fabio.f.dasilva@hotmail.com)</p>
         </div>
 

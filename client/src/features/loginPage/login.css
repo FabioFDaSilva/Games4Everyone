@@ -10,9 +10,6 @@
   width: 25%;
   height: 250px;
   align-self: center;
-  background-color: darkgrey;
-  border: 1px solid black;
-  box-shadow: -1px 1px yellow;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -25,9 +22,11 @@
 #loginButton{
   align-self: center;
   width: 25%;
+  border-radius: 10px;
 }
 
 #googleLogin {
   align-self: center;
   width: 20%;
+  border-radius: 10px;
 }

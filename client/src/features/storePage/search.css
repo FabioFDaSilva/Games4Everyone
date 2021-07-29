@@ -1,10 +1,13 @@
 
 #searchForm {
   display: flex;
-  background-color: rgb(187, 185, 185);
+  margin-top: 2.5em;
   flex-direction: column;
+  padding-right: 0.5em;
+  border-right: 1px solid grey;
 }
 
 #searchForm .searchField{
   align-self: flex-start;
+  margin-top: 0.5em;
 }
